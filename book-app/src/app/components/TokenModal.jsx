@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const TokenModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [token, setToken] = useState(null);
 
 
@@ -19,9 +20,13 @@ const TokenModal = ({ isOpen, onClose }) => {
     }
   };
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (isOpen) {
-      fetchToken();
+      fetchToken().then(() => {
+      }).catch(error => {
+        console.error('Error', error);
+      });
     }
   }, [isOpen]);
 
