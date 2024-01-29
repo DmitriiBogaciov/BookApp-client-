@@ -1,5 +1,7 @@
 export default function Home() {
   return (
-    <p>Main Page</p>
+    <div className="container flex flex-col justify-content-center align-items-center">
+      <div><p>Main Page</p></div>
+      </div>
   )
 }
