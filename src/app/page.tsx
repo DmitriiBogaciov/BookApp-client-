@@ -3,6 +3,12 @@ import axios from "axios"
 import { useState } from "react";
 const apiUrl = process.env.NEXT_PUBLIC_BABOOX_API;
 
+interface BookResponse {
+  result: {
+    title: string;
+  };
+}
+
 export default function Home() {
   const [book, setBook] = useState(null);
 
@@ -23,7 +29,7 @@ export default function Home() {
 
   async function createBook() {
     try {
-      const response = await axios.post(`${apiUrl}/book/create`,
+      const response = await axios.post<BookResponse>(`${apiUrl}/book/create`,
         { title: "First book" },
         {
           headers: {
