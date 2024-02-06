@@ -3,8 +3,13 @@ import axios from "axios"
 import { useState } from "react";
 const apiUrl = process.env.NEXT_PUBLIC_BABOOX_API;
 
+interface Book {
+  title: string;
+  // Add other properties of the book object if needed
+}
+
 export default function Home() {
-  const [book, setBook] = useState(null);
+  const [book, setBook] = useState<Book | null>(null);
 
   const fetchToken = async () => {
     try {
