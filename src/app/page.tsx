@@ -3,6 +3,17 @@ import axios from "axios"
 import { useState } from "react";
 const apiUrl = process.env.NEXT_PUBLIC_BABOOX_API;
 
+
+interface Book {
+  title: string;
+}
+
+interface BookResponse {
+  result: {
+    title: string;
+  };
+}
+
 export default function Home() {
   const [book, setBook] = useState<Book | null>(null);
 
