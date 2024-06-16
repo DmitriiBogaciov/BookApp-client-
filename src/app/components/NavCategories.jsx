@@ -15,24 +15,20 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import TokenModal from './TokenModal';
 
 const NavBar = () => {
-  const { user, isLoading } = useUser();
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen)
-  const [tokenModalOpen, setTokenModalOpen] = useState(false);
-
+    
   const openTokenModal = () => setTokenModalOpen(true);
   const closeTokenModal = () => setTokenModalOpen(false);
 
   return (
     <div className="nav-container" data-testid="navbar">
-      <Navbar color="light items-center" light expand="md">
+      <Navbar color="light" light expand="md">
         <Container>
           <NavbarToggler onClick={toggle}/>
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
               <NavItem>
-                <a href="/" className="nav-link !text-baoboox !font-bold text-xl">
-                  BaoBoox
+                <a href="/" className="nav-link">
+                  Home
                 </a>
               </NavItem>
               {user && (
