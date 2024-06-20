@@ -12,7 +12,7 @@ import {
   DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap'
 import { useUser } from '@auth0/nextjs-auth0/client';
-import TokenModal from './TokenModal';
+import TokenModal from './navBar/TokenModal';
 
 const NavBar = () => {
   const { user, isLoading } = useUser();
@@ -27,7 +27,7 @@ const NavBar = () => {
     <div className="nav-container" data-testid="navbar">
       <Navbar color="light items-center" light expand="md">
         <Container>
-          <NavbarToggler onClick={toggle}/>
+          <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
               <NavItem>
@@ -38,7 +38,7 @@ const NavBar = () => {
               {user && (
                 <NavItem>
                   <button onClick={openTokenModal} className="nav-link">ShowToken</button>
-                  <TokenModal isOpen={tokenModalOpen} onClose={closeTokenModal}/>
+                  <TokenModal isOpen={tokenModalOpen} onClose={closeTokenModal} />
                 </NavItem>
               )}
             </Nav>
@@ -87,19 +87,19 @@ const NavBar = () => {
             {user && (
               <Nav className="d-md-none justify-content-between" navbar>
                 <NavItem>
-                            <span className="user-info">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={user.picture}
-                                alt="Profile"
-                                className="nav-user-profile d-inline-block rounded-circle mr-3"
-                                width="50"
-                                height="50"
-                              />
-                              <h6 className="d-inline-block">
-                                {user.name}
-                              </h6>
-                            </span>
+                  <span className="user-info">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={user.picture}
+                      alt="Profile"
+                      className="nav-user-profile d-inline-block rounded-circle mr-3"
+                      width="50"
+                      height="50"
+                    />
+                    <h6 className="d-inline-block">
+                      {user.name}
+                    </h6>
+                  </span>
                 </NavItem>
                 <NavItem>
                   <a href="/api/auth/logout">
