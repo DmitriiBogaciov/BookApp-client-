@@ -1,21 +1,19 @@
 import React from 'react';
-import { useTranslation } from 'next-i18next';
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink, Input } from 'reactstrap';
 import LogInButton from './LogInButton';
 
 const NavBar = () => {
-  const { t } = useTranslation();
 
   return (
-    <div className="nav-container">
+    <div className="nav-container hidden-md-up">
       <Navbar color="light" light expand="md" className="justify-content-center">
         <NavbarBrand href='/' className='no-underline !text-baoboox font-bold text-lg'>
-          {t('BaoBoox')}
+          BaoBoo
         </NavbarBrand>
         <Nav className="mr-auto flex-grow-1 justify-content-end" navbar>
           <NavItem>
             <NavLink href="#" className="">
-              {t('Explore')}
+              Explore
             </NavLink>
           </NavItem>
           <NavItem className='flex-1'>
@@ -23,12 +21,12 @@ const NavBar = () => {
           </NavItem>
           <NavItem>
             <NavLink href="#" className="">
-              {t('My studio')}
+              My studio
             </NavLink>
           </NavItem>
           <NavItem>
             <NavLink href="#" className="">
-              {t('Continue')}
+              Continue
             </NavLink>
           </NavItem>
           <NavItem>

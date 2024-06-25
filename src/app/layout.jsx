@@ -1,4 +1,4 @@
-import { appWithTranslation } from 'next-i18next';
+'use client'
 // import type { Metadata} from 'next'
 import React from 'react';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
