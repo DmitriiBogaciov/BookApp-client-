@@ -1,0 +1,16 @@
+{
+    "Index": {
+        "title": "Baoboox"
+    },
+    "LocaleSwitcher": {
+        "label": "Сменить язык",
+        "locale": "{locale, select, ru {🇷🇺} en {🇺🇸} other {Unknown}}"
+    },
+    "Nav": {
+        "Explore": "Исследовать",
+        "Search": "Поиск...",
+        "MyStudio": "Моя студия",
+        "Continue": "Продолжить",
+        "Login": "Войти"
+    }
+}
