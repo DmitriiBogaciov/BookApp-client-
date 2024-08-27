@@ -11,6 +11,7 @@
         "Search": "Search...",
         "MyStudio": "My studio",
         "Continue": "Continue",
-        "Login": "Log in"
+        "Login": "Log in",
+        "Logout": "Log out"
     }
 }

@@ -55,8 +55,10 @@ export default async function LocaleLayout({
       <body className={clsx(inter.className, 'flex h-full flex-col')}>
         <NextIntlClientProvider messages={messages}>
           <UserProvider>
-            <MainNavBar />
-            {children}
+              <div className=''>
+                <MainNavBar />
+              </div>
+              {children}
           </UserProvider>
         </NextIntlClientProvider>
       </body>

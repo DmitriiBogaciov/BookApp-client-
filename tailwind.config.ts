@@ -16,7 +16,7 @@ const config: Config = {
       colors: {
         'baoboox': '#5B43A1'
       }
-    },
+    }
   },
   plugins: [],
 }
