@@ -19,7 +19,7 @@ const BooksForCreators = async () => {
             }
           `,
         }),
-        next: { revalidate: 60 }
+        next: { revalidate: 10 }
     });
 
     const {data} = await response.json()
