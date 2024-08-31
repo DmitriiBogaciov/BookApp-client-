@@ -1,12 +1,4 @@
-// import React from 'react';
-
-interface Book {
-  _id: string;
-  title: string;
-  description: string;
-  author: string;
-  visibility: boolean;
-}
+import{Book} from '@/app/utils/interfaces'
 
 const ServerBookList = async () => {
   // Выполняем запрос данных с API

@@ -1,50 +1,57 @@
-'use client'
+'use client';
 
 import React from 'react';
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink, Input } from 'reactstrap';
 import LogInButton from './LogInButton';
 import LocaleSwitcher from '../LocaleSwitcher';
 import { useTranslations } from 'next-intl';
+import {Link} from '@/navigation';
 
 const NavBar = () => {
-  const n = useTranslations('Nav')
+  const t = useTranslations('Nav');// Получаем текущую локаль и путь
 
   return (
-      <div className="nav-container hidden-md-up">
-        <Navbar color="light" light expand="md" className="justify-content-center bg-gray-500">
-          <NavbarBrand href='/' className='no-underline !text-baoboox font-bold text-lg'>
-            BaoBoox
-          </NavbarBrand>
-          <Nav className="mr-auto flex-grow-1 justify-content-end" navbar>
-            <NavItem>
-              <NavLink href="#" className="">
-                {n('Explore')}
+    <div className="nav-container hidden-md-up">
+      <Navbar color="light" light expand="md" className="justify-content-center bg-gray-500">
+        <NavbarBrand >
+          <Link className='no-underline !text-baoboox font-bold text-lg' href={`/`}>BaoBoox</Link> 
+        </NavbarBrand>
+        <Nav className="mr-auto flex-grow-1 justify-content-end" navbar>
+          <NavItem>
+            <Link className='no-underline' href={`/explore`} passHref>
+              <NavLink>
+                {t('Explore')}
               </NavLink>
-            </NavItem>
-            <NavItem className='flex-1'>
-              <Input type="text" placeholder={n('Search')} className="" />
-            </NavItem>
-            <NavItem>
-              <NavLink href="#" className="">
-                {n('MyStudio')}
+            </Link>
+          </NavItem>
+          <NavItem className='flex-1'>
+            <Input type="text" placeholder={t('Search')} className="" />
+          </NavItem>
+          <NavItem>
+            <Link className='no-underline' href={`/studio`} passHref>
+              <NavLink>
+                {t('MyStudio')}
               </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="#" className="">
-                {n('Continue')}
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link className='no-underline' href={`/continue`} passHref>
+              <NavLink>
+                {t('Continue')}
               </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="#" className="">
-                <LocaleSwitcher />
-              </NavLink>
-            </NavItem>
-            <NavItem className='flex content-center'>
-              <LogInButton />
-            </NavItem>
-          </Nav>
-        </Navbar>
-      </div>
+            </Link>
+          </NavItem>
+          <NavItem>
+            <NavLink href="#" className="">
+              <LocaleSwitcher />
+            </NavLink>
+          </NavItem>
+          <NavItem className='flex content-center'>
+            <LogInButton />
+          </NavItem>
+        </Nav>
+      </Navbar>
+    </div>
   );
 };
 
