@@ -1,10 +1,13 @@
+import { getAccessToken } from '@auth0/nextjs-auth0';
+
 const GetBookPages = async (id: string) => {
     try {
+      const {accessToken} = await getAccessToken()
       const response = await fetch(`${process.env.API}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // 'Authorization': `Bearer ${accessToken}`
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify({
           query: `

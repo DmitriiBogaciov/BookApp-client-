@@ -6,7 +6,7 @@ export default async function book({params}: {params:{id: string}}) {
   console.log(pages)
 
   return (
-    <div className="container flex flex-col justify-content-center align-items-center">
+    <div className="container flex flex-col  align-items-center">
       <h2>This is one book {params.id}</h2>
     </div>
   )
