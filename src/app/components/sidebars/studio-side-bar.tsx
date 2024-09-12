@@ -1,40 +1,54 @@
-'use client'
-import BookWithPagesSideBar from "./book-with-pages-side-bar"
-import BooksSideBar from './books-side-bar'
+import React from 'react';
 import { Book } from '@/app/utils/interfaces';
-import { useState } from "react"
+import { Link } from '@/navigation';
 
 interface StudioSideBarProps {
-    Books: Book[];
+  Books: Book[];
 }
 
-const StudioSideBar = ({ Books }: StudioSideBarProps) => {
-
-    const [isBookBarOpen, setIsBookBarOpen] = useState(false)
-    const [book, setBook] = useState(null)
-    const [bookId, setBookId] = useState(null)
-
-    const OpenBookBar = () => {
-        setIsBookBarOpen(true)
-    }
-
-    const CloseBookBar = () => {
-        setIsBookBarOpen(false)
-    }
-
+const StudioSideBar = ({ Books}: StudioSideBarProps) => {
+  if (!Books || Books.length === 0) {
     return (
-        <div>
-            {isBookBarOpen ? (
-                <div>
-                    <BookWithPagesSideBar Book={Books[0]} CloseBookBar={CloseBookBar} />
-                </div>
-            ) : (
-                <div>
-                    <BooksSideBar Books={Books} OpenBookBar={OpenBookBar} />
-                </div>
-            )}
+      <div className="w-64 border h-screen border-black p-4 bg-gray-100">
+        <div className="flex justify-between items-center mb-4 font-bold">
+          <span>Books</span>
+          <button className="text-xl font-bold">+</button>
         </div>
-    )
-}
+        <p>No books available.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-64 border h-screen border-black p-4 bg-gray-100">
+      <div className="flex justify-between items-center mb-4 font-bold">
+        <span>Books</span>
+        <button className="text-xl font-bold">+</button>
+      </div>
+      <ul className="list-none p-0">
+        {Books.map((book) => {
+          if (!book._id || !book.title) {
+            console.warn(`Invalid book data: ${JSON.stringify(book)}`);
+            return null;
+          }
+          return (
+            <div key={book._id}>
+              <Link
+                href={`/studio/book/${book._id}`}
+                className="no-underline"
+              >
+                <li
+                  className="border border-black p-2 mb-2 hover:bg-gray-200 cursor-pointer"
+                >
+                  {book.title}
+                </li>
+              </Link>
+            </div>
+          );
+        })}
+      </ul>
+    </div>
+  );
+};
 
 export default StudioSideBar;

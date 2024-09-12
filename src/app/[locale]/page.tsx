@@ -1,4 +1,4 @@
-import ServerBookList from '../components/server-fetching-components/BookList';
+import ServerBookList from '../server-fetching-components/BookList';
 
 export default function Home() {
 

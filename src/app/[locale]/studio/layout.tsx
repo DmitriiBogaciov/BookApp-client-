@@ -1,7 +1,7 @@
 import Sidebar from '@/app/components/sidebars/studio-side-bar'
-import BooksForCreators from "@/app/components/server-fetching-components/BooksForCreator";
+import { BooksForCreators } from '@/app/services/bookService'
 
-export default async function EmptyLayout({
+export default async function StudioLayout({
     children,
 }: {
     children: React.ReactNode
