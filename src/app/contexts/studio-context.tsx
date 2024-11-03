@@ -1,21 +1,30 @@
 'use client';
-
+import {Book} from '@/app/utils/interfaces'
 import { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
 
 // Определяем интерфейс для значений контекста
 interface StudioContextType {
-    bookTitle: string | null;
-    setBookTitle: Dispatch<SetStateAction<string | null>>;
+    books: Book[];
+    updateBookTitle: (id: string, newTitle: string) => void;
+    setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
 }
 
 // Создаем контекст с указанным типом
 const StudioContext = createContext<StudioContextType | null>(null);
 
 export function StudioProvider({ children }: { children: ReactNode }) {
-    const [bookTitle, setBookTitle] = useState<string | null>('');
+    const [books, setBooks] = useState<Book[]>([]);
+
+    const updateBookTitle = (id: string, newTitle: string) => {
+        setBooks(prevBook => 
+            prevBook.map(book => 
+                book._id === id ? {...book, title: newTitle} : book
+            )
+        )
+    }
 
     return (
-        <StudioContext.Provider value={{ bookTitle, setBookTitle }}>
+        <StudioContext.Provider value={{ books, setBooks, updateBookTitle }}>
             {children}
         </StudioContext.Provider>
     );

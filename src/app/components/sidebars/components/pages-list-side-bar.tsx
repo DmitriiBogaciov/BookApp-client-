@@ -18,14 +18,13 @@ export default function PagesListSideBar({ props, bookId }: PagesListSideBarProp
     }, [props, setPages]);
 
     return (
-        <div className="w-64 border h-screen border-black p-4 bg-gray-100">
-            <div className="flex justify-between items-center mb-4 font-bold">
-                <button className="text-xl font-bold">+</button>
+        <div className="w-64 h-screen bg-gray-100">
+            <div className="flex justify-between items-center font-bold">
             </div>
             <ul className="list-none p-0">
                 {pages.map((page) => (
                     <Link key={page._id} href={`/studio/book/${bookId}/page/${page._id}`}>
-                        <li className="border border-black p-2 mb-2 hover:bg-gray-200 cursor-pointer">
+                        <li className=" p-2 mb-2 hover:bg-gray-200 cursor-pointer">
                             {page.title}
                         </li>
                     </Link>

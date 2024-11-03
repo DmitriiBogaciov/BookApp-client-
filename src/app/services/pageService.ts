@@ -42,6 +42,8 @@ export const UpdatePageTitle = async (pageId: string, newTitle: string) => {
 
     const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
 
+    console.log("updatebookresponse: ", data)
+    
     if (!data || !data.updatePage) {
         throw new Error('Failed to update page title');
     }

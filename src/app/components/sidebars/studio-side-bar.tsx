@@ -1,12 +1,18 @@
+'use client'
+
 import React from 'react';
 import { Book } from '@/app/utils/interfaces';
 import { Link } from '@/navigation';
+import { useStudioContext }  from '@/app/contexts/studio-context'
 
 interface StudioSideBarProps {
   Books: Book[];
 }
 
 const StudioSideBar = ({ Books}: StudioSideBarProps) => {
+
+  const {books, setBooks } = useStudioContext()
+
   if (!Books || Books.length === 0) {
     return (
       <div className="w-64 border h-screen border-black p-4 bg-gray-100">
@@ -19,6 +25,8 @@ const StudioSideBar = ({ Books}: StudioSideBarProps) => {
     );
   }
 
+  setBooks(Books)
+
   return (
     <div className="w-64 border h-screen border-black p-4 bg-gray-100">
       <div className="flex justify-between items-center mb-4 font-bold">
@@ -26,7 +34,7 @@ const StudioSideBar = ({ Books}: StudioSideBarProps) => {
         <button className="text-xl font-bold">+</button>
       </div>
       <ul className="list-none p-0">
-        {Books.map((book) => {
+        {books.map((book) => {
           if (!book._id || !book.title) {
             console.warn(`Invalid book data: ${JSON.stringify(book)}`);
             return null;

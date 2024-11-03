@@ -1,23 +1,2 @@
-# Игнорируем node_modules и build директории
 node_modules
-build
-
-# Игнорируем исполняемые файлы
-exec.*
-
-# Игнорируем логи npm и yarn
-npm-debug.log*
-yarn-error.log
-yarn-debug.log*
-
-# Игнорируем файлы тестирования
-/coverage
-
-# Игнорируем различные файлы
-.DS_Store
-.env.development.local
-.env.test.local
-.env.production.local
-
-# README файл
-README.md
+.next
