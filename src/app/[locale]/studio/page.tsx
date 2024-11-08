@@ -1,5 +1,5 @@
 export const dynamic = "force-dynamic";
-import StudioWindow from '@/app/components/studio/main'
+import StudioWindow from '@/app/[locale]/studio/components/main'
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 export default withPageAuthRequired(
@@ -10,7 +10,7 @@ export default withPageAuthRequired(
     return (
         <div>
             {/* <Sidebar Books={Books}/> */}
-            {/* <StudioWindow /> */}
+            <StudioWindow />
         </div>
     )
 })

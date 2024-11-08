@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:watch": "npx nodemon --exec \"next dev\""
   },
   "dependencies": {
     "@apollo/client": "^3.11.4",
@@ -18,6 +19,7 @@
     "graphql-request": "^7.1.0",
     "next": "^14.2.4",
     "next-intl": "^3.15.3",
+    "nodemon": "^3.1.7",
     "react": "^18",
     "react-dom": "^18",
     "reactstrap": "^9.2.1",

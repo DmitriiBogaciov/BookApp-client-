@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/verify/page.tsx", "src/app/components/navBar/TokenModal.jsx", "src/app/components/navBar/NavBarMobile.jsx", "src/app/components/navBar/NavBarDesktop.jsx", "src/app/components/navBar/menuButton.jsx", "src/app/components/navBar/MainNavBar.jsx", "src/app/components/navBar/LogInButton.jsx", "src/app/layout.tsx", "src/config.ts", "next.config.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/verify/page.tsx", "src/app/components/NavBar/TokenModal.jsx", "src/app/components/NavBar/NavBarMobile.jsx", "src/app/components/NavBar/NavBarDesktop.jsx", "src/app/components/NavBar/menuButton.jsx", "src/app/components/NavBar/MainNavBar.jsx", "src/app/components/NavBar/LogInButton.jsx", "src/app/layout.tsx", "src/config.ts", "next.config.js"],
   "exclude": ["node_modules"]
 }

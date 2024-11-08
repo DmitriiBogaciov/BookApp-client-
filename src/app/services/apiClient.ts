@@ -27,8 +27,8 @@ export const fetchGraphQL = async (query: string, variables: any, options: Fetch
       headers,
       body,
       ...(options.revalidate !== undefined
-        ? { next: { revalidate: options.revalidate } } // если revalidate указано, используем кэш
-        : { cache: 'no-store' }), // отключаем кэш, если revalidate не указано
+        ? { next: { revalidate: options.revalidate } }
+        : { cache: 'no-store' }), 
     };
 
     const response = await fetch(`${process.env.API}`, fetchOptions);

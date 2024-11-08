@@ -1,46 +1,100 @@
 import { fetchGraphQL } from './apiClient'
 
-export const BooksForCreators = async () => {
-  const revalidate = undefined;
-  const query = `
-    query GetBooks {
-      booksForAuthor {
+export default class BookServise {
+
+  getAllBooks = async () => {
+    const revalidate = undefined;
+    const query = `
+      query GetBooks {
+        books {
+          _id
+          title
+          description
+          author
+        }
+      }
+    `;
+
+    try {
+      const data = await fetchGraphQL(query, {}, { revalidate, useToken: false });
+
+      if (!data || !data.books) {
+        throw new Error("No books found");
+      }
+
+      return data.books;
+
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      throw new Error("Failed to fetch books");
+    }
+  };
+
+  booksForCreators = async () => {
+    const revalidate = undefined;
+    const query = `
+      query GetBooks {
+        booksForAuthor {
+          _id
+          title
+        }
+      }
+    `;
+
+    const data = await fetchGraphQL(query, {}, { revalidate, useToken: true });
+    if (!data || !data.booksForAuthor) {
+      console.warn('No books found');
+      return [];
+    }
+    return data.booksForAuthor;
+  };
+
+  updateBookTitle = async (bookId: string, newTitle: string) => {
+    const revalidate = undefined;
+    const mutation = `
+    mutation UpdateBook($input: UpdateBookInput!) {
+      updateBook(updateBookInput: $input) {
         _id
         title
+        }
+      }
+    `;
+    const variables = {
+      input: {
+        id: bookId,
+        title: newTitle
       }
     }
-  `;
 
-  const data = await fetchGraphQL(query, {}, { revalidate, useToken: true });
-  if (!data || !data.booksForAuthor) {
-    throw new Error('No books found');
-  }
-  return data.booksForAuthor;
-};
+    const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
 
-export const UpdateBookTitle = async (bookId: string, newTitle: string) => {
-  const revalidate = undefined;
-  const mutation = `
-  mutation UpdateBook($input: UpdateBookInput!) {
-    updateBook(updateBookInput: $input) {
-      _id
-      title
+    if (!data || !data.updateBook) {
+      throw new Error('Failed to update book title');
+    }
+
+    return data.updateBook;
+  };
+
+  createBook = async () => {
+    const revalidate = undefined;
+    const mutation = `
+    mutation CreateBook($input: CreateBookInput!) {
+      createBook(createBookInput: $input) {
+        _id
+        title
+        }
       }
+    `;
+    const variables = {
+      input: {}
     }
-  `;
-  const variables = {
-    input: {
-      id: bookId,
-      title: newTitle
+
+    try {
+      const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
+      return data.createBook;
+    } catch(error) {
+      console.error("Error creating book:", error);
+      return {}
     }
   }
-
-  const data = await fetchGraphQL(mutation, variables, {revalidate, useToken: true});
-
-  if (!data || !data.updateBook) {
-    throw new Error('Failed to update book title');
-  }
-
-  return data.updateBook
 }
-

@@ -1,24 +1,26 @@
 import { Page } from '@/app/utils/interfaces';
-import PagesListSideBar from './components/pages-list-side-bar';
-import { GetBookPagesStudio } from '@/app/services/pageService';
-import StudioBookTitle from './components/studio-book-title';
+import PagesListSideBar from './pages-list';
+import PageService from '@/app/services/pageService';
+import StudioBookTitle from './book-title';
+
+const pageService = new PageService();
 
 interface StudioBookSideBarProps {
-    id: string;
+    id: string
 }
 
-const StudioBookSideBar = async ({ id }: StudioBookSideBarProps) => {
+const StudioBookSideBar = async ({ id}: StudioBookSideBarProps) => {
     if (!id) {
         return <EmptyState message="Book is not available" />;
     }
 
     try {
-        const pages: Page[] = await GetBookPagesStudio(id);
+        const pages: Page[] = await pageService.getBookPagesStudio(id);
 
         return (
             <div className="w-64 border h-screen border-black bg-gray-100">
                 <div className="flex justify-between items-center font-bold">
-                    <StudioBookTitle id={id} />
+                    <StudioBookTitle id={id}/>
                     <button className="text-xl font-bold">+</button>
                 </div>
                 {pages && pages.length > 0 ? (

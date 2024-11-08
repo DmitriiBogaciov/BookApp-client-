@@ -1,7 +1,9 @@
 'use server';
 
-import { UpdatePageTitle } from "../services/pageService";
+import PageService from "../services/pageService";
+
+const pageService = new PageService();
 
 export async function updatePageTitle(id: string, newTitle: string) {
-    return await UpdatePageTitle(id, newTitle);
+    return await pageService.updatePageTitle(id, newTitle);
 }

@@ -6,6 +6,7 @@ import { updateBookTitleAction } from '@/app/actions/bookActions';
 
 interface StudioBookTitleProps {
     id: string;
+    title: string
 }
 
 const StudioBookTitle = ({ id }: StudioBookTitleProps) => {
@@ -28,7 +29,6 @@ const StudioBookTitle = ({ id }: StudioBookTitleProps) => {
         if(data.title){
             updateBookTitle(data._id, data.title);
         }
-        
     }
 
     const handleInputBlur = () => {

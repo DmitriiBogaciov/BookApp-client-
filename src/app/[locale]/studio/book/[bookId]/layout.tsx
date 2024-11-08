@@ -1,4 +1,4 @@
-import Sidebar from '@/app/components/sidebars/studio-book-side-bar'
+import Sidebar from '@/app/[locale]/studio/book/[bookId]/components/sidebar/side-bar'
 import React from 'react';
 import { PagesClientProvider } from '@/app/contexts/client-provider';
 

@@ -1,13 +1,15 @@
-import Sidebar from '@/app/components/sidebars/studio-side-bar'
-import { BooksForCreators } from '@/app/services/bookService'
+import Sidebar from '@/app/[locale]/studio/components/sidebar/studio-side-bar'
+import BookService from '@/app/services/bookService'
 import { StudioProvider } from '@/app/contexts/studio-context'
+
+const bookService = new BookService();
 
 export default async function StudioLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    const Books = await BooksForCreators()
+    const Books = await bookService.booksForCreators()
 
     return (
         <StudioProvider>
