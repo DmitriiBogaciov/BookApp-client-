@@ -31,12 +31,15 @@ export const fetchGraphQL = async (query: string, variables: any, options: Fetch
         : { cache: 'no-store' }), 
     };
 
+    console.log(fetchOptions)
+
     const response = await fetch(`${process.env.API}`, fetchOptions);
     const { data } = await response.json();
+    console.log('Response', data)
 
-    if (!data) {
-      throw new Error('No data found');
-    }
+    // if (!data) {
+    //   throw new Error('No data found');
+    // }
 
     return data;
   } catch (error) {

@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useStudioContext } from '@/app/contexts/studio-context';
-import { updateBookTitleAction } from '@/app/actions/bookActions';
+import { updateBookTitleAction, getBookAction } from '@/app/actions/bookActions';
+
+interface Book {
+    _id: string;
+    title: string;
+}
 
 interface StudioBookTitleProps {
     id: string;
@@ -10,10 +15,22 @@ interface StudioBookTitleProps {
 }
 
 const StudioBookTitle = ({ id }: StudioBookTitleProps) => {
-    const { books, updateBookTitle} = useStudioContext();
+    const [book, setBook] = useState<Book | null>(null);
     const [inputValue, setInputValue] = useState<string>("")
 
-    const book = books.find(b => b._id === id);
+    useEffect(() => {
+        const fetchBook = async () => {
+            try {
+                const result = await getBookAction(id)
+                console.log(result)
+                setBook(result);
+            } catch (error) {
+                console.error("Failed to fetch the book:", error);
+            }
+        };
+
+        fetchBook();
+    }, [id]);
 
     useEffect(() => {
         if (book) {
@@ -26,9 +43,6 @@ const StudioBookTitle = ({ id }: StudioBookTitleProps) => {
 
         const data = await updateBookTitleAction(id, inputValue);
 
-        if(data.title){
-            updateBookTitle(data._id, data.title);
-        }
     }
 
     const handleInputBlur = () => {

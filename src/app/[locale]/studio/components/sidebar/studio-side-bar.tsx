@@ -3,12 +3,8 @@
 import React, {useEffect} from 'react';
 import { Book } from '@/app/utils/interfaces';
 import { Link } from '@/navigation';
-import { useStudioContext } from '@/app/contexts/studio-context'
 import { SlOptions } from "react-icons/sl";
-import BookServise from '@/app/services/bookService';
 import { createBook } from '@/app/actions/bookActions';
-
-const bookService = new BookServise();
 
 interface StudioSideBarProps {
   Books: Book[];
@@ -16,17 +12,9 @@ interface StudioSideBarProps {
 
 const StudioSideBar = ({ Books }: StudioSideBarProps) => {
 
-  const { books, setBooks } = useStudioContext()
-  
-  useEffect(() => {
-    if (Books && Books.length > 0) {
-      setBooks(Books);
-    }
-  },[Books, setBooks])
-
-  // const createBook = async () => {
-  //   bookService.createBook()
-  // }
+  const handleCreateBook = async () => {
+    createBook()
+  }
 
   if (!Books || Books.length === 0) {
     return (
@@ -46,13 +34,13 @@ const StudioSideBar = ({ Books }: StudioSideBarProps) => {
         <span>Books</span>
         <button
           className="text-xl font-bold"
-          onClick={() => createBook()}
+          onClick={() => handleCreateBook()}
         >
           +
         </button>
       </div>
       <ul className="list-none p-0">
-        {books.map((book) => {
+        {Books.map((book) => {
           if (!book._id || !book.title) {
             console.warn(`Invalid book data: ${JSON.stringify(book)}`);
             return null;
@@ -67,10 +55,7 @@ const StudioSideBar = ({ Books }: StudioSideBarProps) => {
                 >
                   <div className='flex justify-between'>
                     <div className=''>
-
                       {book.title}
-
-
                     </div>
                     <div className='content-center'>
                       <SlOptions />

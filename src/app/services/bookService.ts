@@ -1,4 +1,5 @@
 import { fetchGraphQL } from './apiClient'
+import { Book } from '../utils/interfaces';
 
 export default class BookServise {
 
@@ -27,6 +28,35 @@ export default class BookServise {
     } catch (error) {
       console.error("Error fetching books:", error);
       throw new Error("Failed to fetch books");
+    }
+  };
+
+  getOneBook = async (id: string) => {
+    const revalidate = undefined;
+    const query = `
+      query GetBook($id: String!) {
+        book(id: $id) {
+          _id
+          title
+      }
+    }
+  `;
+    const variables = {
+      id: id
+    };
+
+    try {
+      const data = await fetchGraphQL(query, variables, { revalidate, useToken: false });
+
+      // if (!data || !data.book) {
+      //   throw new Error("No book found");
+      // }
+
+      return data.book;
+
+    } catch (error) {
+      console.error("Error fetching book:", error);
+      return {}
     }
   };
 
@@ -92,7 +122,7 @@ export default class BookServise {
     try {
       const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
       return data.createBook;
-    } catch(error) {
+    } catch (error) {
       console.error("Error creating book:", error);
       return {}
     }

@@ -11,3 +11,7 @@ export async function updateBookTitleAction(id: string, newTitle: string) {
 export async function createBook() {
     return await bookService.createBook()
 }
+
+export async function getBookAction(id: string) {
+    return await bookService.getOneBook(id);
+}

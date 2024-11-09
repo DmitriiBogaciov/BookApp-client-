@@ -9,12 +9,12 @@ export default async function StudioLayout({
 }: {
     children: React.ReactNode
 }) {
-    const Books = await bookService.booksForCreators()
+    const books = await bookService.booksForCreators()
 
     return (
         <StudioProvider>
             <div className='flex h-screen'>
-                <Sidebar Books={Books} />
+                <Sidebar Books={books} />
                 {children}
             </div>
         </StudioProvider>
