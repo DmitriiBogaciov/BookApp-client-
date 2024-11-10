@@ -15,3 +15,7 @@ export async function createBook() {
 export async function getBookAction(id: string) {
     return await bookService.getOneBook(id);
 }
+
+export async function removeOneBook(id:string){
+    return await bookService.removeOneBook(id)
+}

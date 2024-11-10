@@ -1,12 +1,12 @@
 import React from 'react';
 import DesktopNavBar from './NavBarDesktop';
-import MobileNavBar from './NavBarMobile';
+// import MobileNavBar from './NavBarMobile';
 const NavBar = () => {
 
     return (
         <>
             <DesktopNavBar />
-            <MobileNavBar />
+            {/* <MobileNavBar /> */}
         </>
     );
 };

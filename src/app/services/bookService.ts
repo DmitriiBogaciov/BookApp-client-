@@ -127,4 +127,31 @@ export default class BookServise {
       return {}
     }
   }
+
+  removeOneBook = async (id: string) => {
+    const revalidate = undefined;
+    const mutation = `
+    mutation RemoveBook($id: String!) {
+      removeBook(id: $id) {
+        deletedCount
+      }
+    }`;
+
+    const variables = {
+      id: id
+    }
+
+    try {
+      const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
+
+      if (!data || !data.removeBook) {
+        throw new Error("Failed to remove the book");
+      }
+
+      return data.removeBook;
+    } catch (error) {
+      console.error("Error removing book:", error);
+      return {};
+    }
+  }
 }

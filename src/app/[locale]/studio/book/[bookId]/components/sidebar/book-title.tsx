@@ -11,7 +11,6 @@ interface Book {
 
 interface StudioBookTitleProps {
     id: string;
-    title: string
 }
 
 const StudioBookTitle = ({ id }: StudioBookTitleProps) => {
@@ -39,10 +38,14 @@ const StudioBookTitle = ({ id }: StudioBookTitleProps) => {
     }, [book]);
 
     const handleUpdateBookTitle = async () => {
-        if (!book) return;
+        if (!book || book.title === inputValue) return;
 
-        const data = await updateBookTitleAction(id, inputValue);
-
+        try {
+            const data = await updateBookTitleAction(id, inputValue);
+            setBook(data)
+        } catch (error) {
+            console.error("Failed to update the book title:", error);
+        }
     }
 
     const handleInputBlur = () => {
@@ -61,9 +64,10 @@ const StudioBookTitle = ({ id }: StudioBookTitleProps) => {
 
     return (
         <input
+            className='bg-transparent border-0 outline-none'
             type="text"
             value={inputValue}
-            placeholder={book ? book.title : "Untitled"}
+            placeholder={book ? book.title : ""}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             onBlur={handleInputBlur}
