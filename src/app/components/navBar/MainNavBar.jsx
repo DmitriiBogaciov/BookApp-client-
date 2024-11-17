@@ -1,7 +1,7 @@
 import React from 'react';
 import DesktopNavBar from './NavBarDesktop';
 // import MobileNavBar from './NavBarMobile';
-const NavBar = () => {
+const MainNavBar = () => {
 
     return (
         <>
@@ -11,5 +11,5 @@ const NavBar = () => {
     );
 };
 
-export default NavBar;
+export default MainNavBar;
 
