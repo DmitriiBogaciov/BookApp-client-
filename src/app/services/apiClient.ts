@@ -31,7 +31,7 @@ export const fetchGraphQL = async (query: string, variables: any, options: Fetch
         : { cache: 'no-store' }), 
     };
 
-    const response = await fetch(`${process.env.API}`, fetchOptions);
+    const response = await fetch(`${process.env.BAOBOOX_API}`, fetchOptions);
     const { data } = await response.json();
     console.log('Response', data)
 
