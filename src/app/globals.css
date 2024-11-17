@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './components/navBar/navbar.css';
+@import './[locale]/components/navBar/navbar.css';
 
 :root {
   --foreground-rgb: 0, 0, 0;
