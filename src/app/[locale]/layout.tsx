@@ -8,7 +8,7 @@ import {
 } from 'next-intl/server';
 import { ReactNode } from 'react';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
-// import MainNavBar from '../components/NavBar/MainNavBar';
+import MainNavBar from './components/NavBar/MainNavBar'
 import { locales } from '@/config';
 import '@/app/globals.css'
 
@@ -56,7 +56,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <UserProvider>
               <div className=''>
-                {/* <MainNavBar /> */}
+                <MainNavBar />
               </div>
               {children}
           </UserProvider>
