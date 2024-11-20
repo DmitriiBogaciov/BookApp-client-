@@ -1,16 +1,23 @@
-export const dynamic = "force-dynamic";
-import StudioWindow from '@/app/[locale]/studio/components/main'
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { getSession } from "@auth0/nextjs-auth0";
+import StudioWindow from "@/app/[locale]/studio/components/main";
+import { getLocale } from "next-intl/server";
+import { redirect } from "next/navigation";
 
-export default withPageAuthRequired(
-    async function studio() {
+export default async function StudioPage() {
+  // Получаем сессию пользователя
+  const session = await getSession();
+  const locale = await getLocale(); // Получаем текущую локаль
 
-    // const Books = await BooksForCreators()
+  // Если пользователь не авторизован, перенаправляем его на страницу логина
+  // if (!session?.user) {
+  //   redirect(`/api/auth/login?returnTo=/${locale}/studio`);
+  //   return null; // Не рендерим страницу
+  // }
 
-    return (
-        <div>
-            {/* <Sidebar Books={Books}/> */}
-            <StudioWindow />
-        </div>
-    )
-})
+  // Если пользователь авторизован, возвращаем содержимое страницы
+  return (
+    <div>
+      <StudioWindow />
+    </div>
+  );
+}

@@ -33,7 +33,7 @@ export const fetchGraphQL = async (query: string, variables: any, options: Fetch
 
     const response = await fetch(`${process.env.BAOBOOX_API}`, fetchOptions);
     const { data } = await response.json();
-    console.log('Response', data)
+    // console.log('Response', data)
 
     if (!data) {
       throw new Error('No data found');

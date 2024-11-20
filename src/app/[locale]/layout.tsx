@@ -1,15 +1,12 @@
 import clsx from 'clsx';
 import { Inter } from 'next/font/google';
-import { NextIntlClientProvider } from 'next-intl';
-import {
-  getMessages,
-  getTranslations,
-  unstable_setRequestLocale
-} from 'next-intl/server';
 import { ReactNode } from 'react';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import MainNavBar from './components/NavBar/MainNavBar'
-import { locales } from '@/config';
+import {NextIntlClientProvider} from 'next-intl';
+import {getMessages} from 'next-intl/server';
+import {notFound} from 'next/navigation';
+import {routing} from '@/i18n/routing';
 import '@/app/globals.css'
 
 const inter = Inter({ subsets: ['latin'] });
@@ -19,27 +16,14 @@ type Props = {
   params: { locale: string };
 };
 
-export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
-}
-
-export async function generateMetadata({
-  params: { locale }
-}: Omit<Props, 'children'>) {
-  const t = await getTranslations({ locale, namespace: 'Index' });
-
-  return {
-    title: t('title')
-  };
-}
-
 export default async function LocaleLayout({
   children,
   params: { locale }
 }: Props) {
-  // Enable static rendering
-  unstable_setRequestLocale(locale);
 
+  if (!routing.locales.includes(locale as any)) {
+    notFound();
+  }
   // Providing all messages to the client
   // side is the easiest way to get started
   const messages = await getMessages();
