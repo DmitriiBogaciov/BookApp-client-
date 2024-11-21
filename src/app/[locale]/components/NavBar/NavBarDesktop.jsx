@@ -12,7 +12,7 @@ import {
   Collapse 
 } from 'reactstrap';
 import LogInButton from './LogInButton';
-import LocaleSwitcher from '../LocaleSwitcher';
+import LocaleSwitcher from './LocaleSwitcher';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/navigation';
 import { useUser } from '@auth0/nextjs-auth0/client';

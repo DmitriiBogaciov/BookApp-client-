@@ -19,7 +19,7 @@ const StudioBookSideBar = async ({ id}: StudioBookSideBarProps) => {
 
         return (
             <div className="w-64 border h-screen border-black bg-gray-100">
-                <div className="flex justify-between items-center font-bold m-2">
+                <div className="flex items-center font-bold m-1">
                     <StudioBookTitle id={id}/>
                     <button className="text-xl font-bold">+</button>
                 </div>

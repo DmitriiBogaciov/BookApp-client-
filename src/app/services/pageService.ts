@@ -52,6 +52,33 @@ export default class PageService {
   
     return data.updatePage;
   };
+
+  removeOnePage = async (id: string) => {
+    const revalidate = undefined;
+    const mutation = `
+    mutation RemovePage($id: String!) {
+      removePage(id: $id) {
+        deletedCount
+      }
+    }`;
+
+    const variables = {
+      id: id
+    }
+
+    try {
+      const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
+
+      if (!data || !data.removePage) {
+        throw new Error("Failed to remove the book");
+      }
+
+      return data.removePage;
+    } catch (error) {
+      console.error("Error removing book:", error);
+      return {};
+    }
+  }
 }
 
 

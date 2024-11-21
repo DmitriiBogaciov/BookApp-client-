@@ -64,7 +64,7 @@ const StudioBookTitle = ({ id }: StudioBookTitleProps) => {
 
     return (
         <input
-            className='bg-transparent border-0 outline-none'
+            className="flex-1 w-full max-w-sm bg-transparent border-0 outline-none"
             type="text"
             value={inputValue}
             placeholder={book ? book.title : ""}

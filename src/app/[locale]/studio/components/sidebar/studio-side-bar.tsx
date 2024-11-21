@@ -5,7 +5,7 @@ import { Book } from '@/app/utils/interfaces';
 import { Link } from '@/navigation';
 import { SlOptions } from "react-icons/sl";
 import { createBook, removeOneBook } from '@/app/actions/bookActions';
-import IconMenu from './icon-menu';
+import IconMenu from './studio-icon-menu';
 // import { Habibi } from 'next/font/google';
 
 interface StudioSideBarProps {
@@ -20,15 +20,15 @@ const StudioSideBar = ({ Books }: StudioSideBarProps) => {
     createBook();
   };
 
-  const handleRemoveBook = async (id:string) => {
+  const handleRemoveBook = async (id: string) => {
     removeOneBook(id)
   }
 
   const handleMenuClick = (event: React.MouseEvent, bookId: string) => {
     event.stopPropagation();
-    setActiveMenu((prev) => 
-      prev && prev.bookId === bookId 
-        ? null 
+    setActiveMenu((prev) =>
+      prev && prev.bookId === bookId
+        ? null
         : { bookId, x: event.clientX, y: event.clientY }
     );
   };
@@ -74,7 +74,7 @@ const StudioSideBar = ({ Books }: StudioSideBarProps) => {
                   {book.title}
                 </Link>
                 <button onClick={(e) => handleMenuClick(e, book._id)} className='content-center'>
-                  <SlOptions className='mr-1'/>
+                  <SlOptions className='mr-1' />
                 </button>
                 {activeMenu && activeMenu.bookId === book._id && (
                   <div
@@ -82,7 +82,7 @@ const StudioSideBar = ({ Books }: StudioSideBarProps) => {
                     className="absolute"
                     style={{ top: `${activeMenu.y}px`, left: `${activeMenu.x}px` }}
                   >
-                    <IconMenu onDelete={() => handleRemoveBook(book._id)}/>
+                    <IconMenu onDelete={() => handleRemoveBook(book._id)} />
                   </div>
                 )}
               </div>
