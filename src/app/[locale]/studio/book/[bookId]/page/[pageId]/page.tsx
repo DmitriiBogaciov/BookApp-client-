@@ -3,12 +3,16 @@ import PageService from "@/app/services/pageService";
 
 const pageService = new PageService();
 
-export default async function Page( params : Promise<{ pageId: string}>) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ pageId: string }>
+}) {
   try {
 
     const par = await params
 
-    let page 
+    let page
     if (par.pageId) {
       page = await pageService.getOnePage(par.pageId);
     }
