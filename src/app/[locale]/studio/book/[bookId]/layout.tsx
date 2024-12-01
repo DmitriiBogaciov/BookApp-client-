@@ -1,20 +1,24 @@
 import Sidebar from '@/app/[locale]/studio/book/[bookId]/components/sidebar/book-side-bar'
 import React from 'react';
-import { PagesClientProvider } from '@/app/contexts/client-provider';
+import PageService from '@/app/services/pageService';
 
-export default function StudioBookLayout({
+const pageService = new PageService();
+
+export default async function StudioBookLayout({
     children,
     params,
 }: {
     children: React.ReactNode
     params: { bookId: string };
 }) {
+    
+    const pages = await pageService.getBookPages(params.bookId)
+    // console.log("Pages: ", JSON.stringify(pages, null, 2))
+
     return (
-        <PagesClientProvider>
-            <div className='flex h-screen'>
-                <Sidebar id={params.bookId} />
-                {children}
-            </div>
-        </PagesClientProvider>
+        <div className='flex h-screen'>
+            <Sidebar Pages={pages} bookId={params.bookId} />
+            {children}
+        </div>
     )
 }

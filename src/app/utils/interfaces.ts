@@ -8,6 +8,10 @@ export interface Book {
 
 export interface Page {
     _id: string;
-    title: string,
-    order: number
-}
+    title: string;
+    parentId: string | null;
+    bookId: string;
+    visibility: boolean;
+    order: number;
+    children: Page[]
+  }

@@ -1,39 +1,30 @@
 'use client';
-import { useContext, useState, useEffect } from "react";
-import { StudioBookContext } from "@/app/contexts/studio-book-context";
+import { useState, useEffect } from "react";
 import { updatePageTitle } from "@/app/actions/pageActions";
 
 interface PageTitleProps {
+    title: string,
     pageId: string;
 }
 
 
-export default function PageTitle({ pageId }: PageTitleProps) {
-    const { pages, setPages } = useContext(StudioBookContext);
+export default function PageTitle({ title, pageId }: PageTitleProps) {
     const [inputValue, setInputValue] = useState<string>("");
-
-    const page = pages.find((page) => page._id === pageId);
     
     useEffect(() => {
-        if (page) {
-            setInputValue(page.title);
+        if (title) {
+            setInputValue(title);
         }
-    }, [page]);
+    }, [title]);
 
-    const handleUpdatePage = () => {
-        if (!page) return;
+    const handleUpdateTitle = () => {
+        if (!title) return;
 
         updatePageTitle(pageId, inputValue); 
-
-        const updatedPages = pages.map(p =>
-            p._id === pageId ? { ...p, title: inputValue } : p
-        );
-
-        setPages(updatedPages);
     };
 
     const handleInputBlur = () => {
-        handleUpdatePage();
+        handleUpdateTitle();
     };
 
 
@@ -43,7 +34,7 @@ export default function PageTitle({ pageId }: PageTitleProps) {
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
-            handleUpdatePage();
+            handleUpdateTitle();
         }
     };
 
@@ -51,7 +42,7 @@ export default function PageTitle({ pageId }: PageTitleProps) {
         <input
             type="text"
             value={inputValue}
-            placeholder={page ? page.title : "Untitled"}
+            placeholder={title ? title : "Untitled"}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             onBlur={handleInputBlur}

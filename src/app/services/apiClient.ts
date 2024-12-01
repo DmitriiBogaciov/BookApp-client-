@@ -7,41 +7,61 @@ interface FetchOptions {
 }
 
 export const fetchGraphQL = async (query: string, variables: any, options: FetchOptions = {}) => {
-  try {
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-    };
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
 
-    if (options.useToken) {
+  if (options.useToken) {
+    try {
       const { accessToken } = await getAccessToken();
       headers['Authorization'] = `Bearer ${accessToken}`;
+    } catch (error) {
+      console.error('Error fetching access token:', error);
+      throw new Error('Failed to retrieve access token.');
+    }
+  }
+
+  const body = JSON.stringify({
+    query,
+    variables,
+  });
+
+  // console.log('Request body:', body);
+
+  const fetchOptions: RequestInit = {
+    method: 'POST',
+    headers,
+    body,
+    ...(options.revalidate !== undefined
+      ? { next: { revalidate: options.revalidate } }
+      : { cache: 'no-store' }),
+  };
+
+  try {
+    const response = await fetch(`${process.env.BAOBOOX_API}`, fetchOptions);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`GraphQL API returned error: ${response.status} ${response.statusText}`);
+      console.error(`Error details: ${errorText}`);
+      throw new Error(`GraphQL API error: ${response.statusText}`);
     }
 
-    const body = JSON.stringify({
-      query,
-      variables,
-    });
+    const { data, errors } = await response.json();
 
-    const fetchOptions: RequestInit = {
-      method: 'POST',
-      headers,
-      body,
-      ...(options.revalidate !== undefined
-        ? { next: { revalidate: options.revalidate } }
-        : { cache: 'no-store' }), 
-    };
-
-    const response = await fetch(`${process.env.BAOBOOX_API}`, fetchOptions);
-    const { data } = await response.json();
-    // console.log('Response', data)
+    if (errors) {
+      console.error('GraphQL response contained errors:', errors);
+      throw new Error(`GraphQL errors: ${JSON.stringify(errors)}`);
+    }
 
     if (!data) {
-      throw new Error('No data found');
+      throw new Error('No data returned from GraphQL API.');
     }
 
+    // console.log("Fetched data: ", data)
     return data;
   } catch (error) {
-    console.error('Error fetching data:', error);
-    return null;
+    console.error('Error in fetchGraphQL:', error);
+    throw error; 
   }
 };

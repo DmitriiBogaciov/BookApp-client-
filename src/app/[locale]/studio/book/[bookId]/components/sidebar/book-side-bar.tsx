@@ -1,33 +1,32 @@
 import { Page } from '@/app/utils/interfaces';
 import PagesListSideBar from './pages-list';
-import PageService from '@/app/services/pageService';
 import StudioBookTitle from './book-title';
+import CreatePageButton from './create-page-button';
 
-const pageService = new PageService();
-
-interface StudioBookSideBarProps {
-    id: string
+interface SrudioBookSideBarProps {
+    Pages: Page[],
+    bookId: string
 }
 
-const StudioBookSideBar = async ({ id}: StudioBookSideBarProps) => {
-    if (!id) {
-        return <EmptyState message="Book is not available" />;
-    }
-
+const StudioBookSideBar = async ({ Pages, bookId }: SrudioBookSideBarProps) => {
     try {
-        const pages: Page[] = await pageService.getBookPagesStudio(id);
-
         return (
             <div className="w-64 border h-screen border-black bg-gray-100">
-                <div className="flex items-center font-bold m-1">
-                    <StudioBookTitle id={id}/>
-                    <button className="text-xl font-bold">+</button>
+                <div className="flex items-center font-bold">
+                    <StudioBookTitle id={bookId} />
                 </div>
-                {pages && pages.length > 0 ? (
-                    <PagesListSideBar props={pages} bookId={id} />
+                {Pages && Pages.length > 0 ? (
+                    <PagesListSideBar pages={Pages} bookId={bookId} />
                 ) : (
-                    <p>No pages found</p>
+                    <p>Book is empty</p>
                 )}
+                <CreatePageButton
+                    bookId={bookId}
+                >
+                    <span className={'pl-2 pt-1 pb-1 pr-2 w-full inline-block hover:bg-gray-200 cursor-pointer'}>
+                        + create page
+                    </span>
+                </CreatePageButton>
             </div>
         );
     } catch (error) {

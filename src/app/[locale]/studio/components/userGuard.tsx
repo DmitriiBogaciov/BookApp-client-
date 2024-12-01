@@ -7,7 +7,7 @@ const SessionGuard = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useUser();
   const pathname = usePathname();
   const router = useRouter();
-  console.log("Pathname Guard: ", pathname)
+  // console.log("Pathname Guard: ", pathname)
 
   // useEffect(() => {
   //   if (!isLoading && !user) {

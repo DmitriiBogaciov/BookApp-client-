@@ -1,5 +1,5 @@
 import React from 'react';
-import DesktopNavBar from './NavBarDesktop';
+import DesktopNavBar from './NavBar';
 const MainNavBar = () => {
 
     return (

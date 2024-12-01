@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { Inter } from 'next/font/google';
 import { ReactNode } from 'react';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
-import MainNavBar from './components/NavBar/MainNavBar'
+import NavBar from './components/NavBar/NavBar'
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';
@@ -40,7 +40,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <UserProvider>
               <div className=''>
-                <MainNavBar />
+                <NavBar />
               </div>
               {children}
           </UserProvider>

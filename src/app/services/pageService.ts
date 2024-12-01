@@ -1,28 +1,81 @@
-import { fetchGraphQL } from './apiClient'
+import { fetchGraphQL } from './apiClient';
+import { Page } from '@/app/utils/interfaces';
 
 export default class PageService {
+  private revalidate = undefined;
 
-  getBookPagesStudio = async (id: string) => {
-    const revalidate = undefined;
+  async getBookPages(bookId: string): Promise<Page[]> {
     const query = `
       query GetPages($id: String!) {
         pagesForBook(id: $id) {
           _id
           title
           order
+          parentId
         }
       }
     `;
+    const variables = { id: bookId };
 
-    const data = await fetchGraphQL(query, { id }, { revalidate, useToken: true });
-    if (!data || !data.pagesForBook) {
-      throw new Error('No pages found for the book');
+    try {
+      const data = await fetchGraphQL(query, variables, { revalidate: this.revalidate, useToken: true });
+      if (!data || !data.pagesForBook) throw new Error('No pages found for the book');
+      return data.pagesForBook;
+    } catch (error) {
+      console.error(`Error fetching pages for book ${bookId}:`, error);
+      throw error; // Пробрасываем ошибку выше
     }
-    return data.pagesForBook;
-  };
+  }
 
-  updatePageTitle = async (pageId: string, newTitle: string) => {
-    const revalidate = undefined;
+  async getOnePage(pageId: string): Promise<Page> {
+    const query = `
+      query GetPage($id: String!) {
+        page(id: $id) {
+          _id
+          title
+        }
+      }
+    `;
+    const variables = { id: pageId };
+
+    try {
+      const data = await fetchGraphQL(query, variables, { revalidate: this.revalidate, useToken: true });
+      // if (!data || !data.page) throw new Error('Page not found');
+      return data.page;
+    } catch (error) {
+      console.error(`Error fetching page ${pageId}:`, error);
+      throw error;
+    }
+  }
+
+  async createPage(bookId: string, parentId: string | null): Promise<Page> {
+    const mutation = `
+      mutation CreatePage($input: CreatePageInput!) {
+        createPage(createPageInput: $input) {
+          _id
+          title
+          parentId
+        }
+      }
+    `;
+    const variables = {
+      input: {
+        bookId,
+        parentId,
+      },
+    };
+
+    try {
+      const data = await fetchGraphQL(mutation, variables, { revalidate: this.revalidate, useToken: true });
+      if (!data || !data.createPage) throw new Error('Failed to create page');
+      return data.createPage;
+    } catch (error) {
+      console.error('Error creating page:', error);
+      throw error;
+    }
+  }
+
+  async updatePageTitle(pageId: string, newTitle: string): Promise<Page> {
     const mutation = `
       mutation UpdatePage($input: UpdatePageInput!) {
         updatePage(updatePageInput: $input) {
@@ -41,45 +94,35 @@ export default class PageService {
         title: newTitle,
       },
     };
-  
-    const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
-  
-    console.log("updatebookresponse: ", data)
-  
-    if (!data || !data.updatePage) {
-      throw new Error('Failed to update page title');
-    }
-  
-    return data.updatePage;
-  };
-
-  removeOnePage = async (id: string) => {
-    const revalidate = undefined;
-    const mutation = `
-    mutation RemovePage($id: String!) {
-      removePage(id: $id) {
-        deletedCount
-      }
-    }`;
-
-    const variables = {
-      id: id
-    }
 
     try {
-      const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
+      const data = await fetchGraphQL(mutation, variables, { revalidate: this.revalidate, useToken: true });
+      if (!data || !data.updatePage) throw new Error('Failed to update page title');
+      return data.updatePage;
+    } catch (error) {
+      console.error(`Error updating page title for page ${pageId}:`, error);
+      throw error;
+    }
+  }
 
-      if (!data || !data.removePage) {
-        throw new Error("Failed to remove the book");
+  async removeOnePage(pageId: string){
+    const mutation = `
+      mutation RemovePage($id: String!) {
+        removePage(id: $id) {
+          _id,
+          bookId
+        }
       }
+    `;
+    const variables = { id: pageId };
 
+    try {
+      const data = await fetchGraphQL(mutation, variables, { revalidate: this.revalidate, useToken: true });
+      if (!data || !data.removePage) throw new Error('Failed to remove the page');
       return data.removePage;
     } catch (error) {
-      console.error("Error removing book:", error);
-      return {};
+      console.error(`Error removing page ${pageId}:`, error);
+      throw error;
     }
   }
 }
-
-
-

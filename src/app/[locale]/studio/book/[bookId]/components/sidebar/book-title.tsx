@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useStudioContext } from '@/app/contexts/studio-context';
 import { updateBookTitleAction, getBookAction } from '@/app/actions/bookActions';
 
 interface Book {
