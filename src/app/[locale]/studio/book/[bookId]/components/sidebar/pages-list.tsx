@@ -28,7 +28,7 @@ export default function PagesListSideBar({ pages, bookId }: PagesListSideBarProp
         console.log("Book id client: ", bookId);
 
         // Инициализация WebSocket с динамическим bookId
-        socket = io('http://localhost:4000', { query: { bookId } });
+        socket = io(`${process.env.NEXT_PUBLIC_BAOBOOX_API_HTTP}`, { query: { bookId } });
 
         // Обработчик успешного подключения
         const handleConnect = () => {
