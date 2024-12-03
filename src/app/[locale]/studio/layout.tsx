@@ -11,8 +11,7 @@ export default async function StudioLayout({
     children: React.ReactNode
 }) {
     const session = await getSession();
-    const books = await bookService.booksForCreators()
-
+    const books = session ? await bookService.booksForCreators() : null;
     return (
         <SessionGuard>
             {session && (

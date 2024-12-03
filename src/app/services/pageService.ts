@@ -110,7 +110,8 @@ export default class PageService {
       mutation RemovePage($id: String!) {
         removePage(id: $id) {
           _id,
-          bookId
+          bookId,
+          parentId
         }
       }
     `;
