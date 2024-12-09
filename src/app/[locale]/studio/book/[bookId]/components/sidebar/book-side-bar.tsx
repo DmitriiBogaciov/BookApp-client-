@@ -22,7 +22,7 @@ const StudioBookSideBar = ({ Pages, bookId }: SrudioBookSideBarProps) => {
     try {
         return (
             <div>
-                <div className={`w-64 h-screen border-r transition-all duration-200 border-gray-200 bg-gray-100
+                <div className={`h-screen border-r transition-all duration-200 border-gray-200 bg-gray-100
                             ${isSidebarOpen ? 'w-44 p-2' : 'w-14'
                     }
                             `}>
@@ -39,26 +39,24 @@ const StudioBookSideBar = ({ Pages, bookId }: SrudioBookSideBarProps) => {
                             </div>
                         )
                     }
-                    {isSidebarOpen && (
-                        <div>
-                            <div className="flex items-center font-bold">
-                                <StudioBookTitle id={bookId} />
-                                <button onClick={toggleSidebar}>
-                                    <CloseIcon />
-                                </button>
-                            </div>
-                            {Pages && Pages.length > 0 ? (
-                                <PagesListSideBar pages={Pages} bookId={bookId} />
-                            ) : (
-                                <p>Book is empty</p>
-                            )}
-                            <CreatePageButton bookId={bookId}>
-                                <span className="pl-2 pt-1 pb-1 pr-2 w-full inline-block hover:bg-gray-200 cursor-pointer">
-                                    + create page
-                                </span>
-                            </CreatePageButton>
+                    <div className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
+                        <div className="flex items-center font-bold">
+                            <StudioBookTitle id={bookId} />
+                            <button onClick={toggleSidebar}>
+                                <CloseIcon />
+                            </button>
                         </div>
-                    )}
+                        {Pages && Pages.length > 0 ? (
+                            <PagesListSideBar pages={Pages} bookId={bookId} />
+                        ) : (
+                            <p>Book is empty</p>
+                        )}
+                        <CreatePageButton bookId={bookId}>
+                            <span className="pl-2 pt-1 pb-1 pr-2 w-full inline-block hover:bg-gray-200 cursor-pointer">
+                                + create page
+                            </span>
+                        </CreatePageButton>
+                    </div>
                 </div>
             </div>
         );

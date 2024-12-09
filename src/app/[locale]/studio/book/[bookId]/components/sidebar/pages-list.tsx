@@ -222,7 +222,7 @@ export default function PagesListSideBar({ pages, bookId }: PagesListSideBarProp
                             )}
                             <Link
                                 href={`/studio/book/${bookId}/page/${page._id}`}
-                                className="flex-1 no-underline"
+                                className="flex-1 no-underline overflow-y-auto"
                             >
                                 {page.title}
                             </Link>
