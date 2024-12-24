@@ -1,5 +1,5 @@
 import PageTitle from "./components/page-title";
-import PageService from "@/app/services/pageService";
+import PageService from "@/app/services/page-service";
 
 const pageService = new PageService();
 

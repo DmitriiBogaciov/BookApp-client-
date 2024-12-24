@@ -38,7 +38,7 @@ export const fetchGraphQL = async (query: string, variables: any, options: Fetch
   };
 
   try {
-    const response = await fetch(`${process.env.BAOBOOX_API}`, fetchOptions);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BAOBOOX_API_GRAPHQL}`, fetchOptions);
 
     if (!response.ok) {
       const errorText = await response.text();

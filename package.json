@@ -10,7 +10,7 @@
     "dev:watch": "npx nodemon --exec \"next dev\""
   },
   "dependencies": {
-    "@apollo/client": "^3.11.4",
+    "@apollo/client": "^3.12.4",
     "@auth0/nextjs-auth0": "^3.5.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -19,8 +19,10 @@
     "@mui/material": "^6.1.7",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
-    "graphql": "^16.9.0",
+    "draft-js": "^0.11.7",
+    "graphql": "^16.10.0",
     "graphql-request": "^7.1.0",
+    "graphql-ws": "^5.16.0",
     "next": "^14.2.4",
     "next-intl": "^3.25.1",
     "nodemon": "^3.1.7",
@@ -32,6 +34,7 @@
     "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
+    "@types/draft-js": "^0.11.18",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

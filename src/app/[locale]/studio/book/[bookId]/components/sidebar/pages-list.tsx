@@ -10,15 +10,24 @@ import { useRouter, usePathname } from '@/i18n/routing';
 import CreatePageButton from "./create-page-button";
 import { io, Socket } from 'socket.io-client';
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { gql, useSubscription } from '@apollo/client';
+
+const PAGE_CREATED_SUBSCRIPTION = gql`
+  subscription {
+    pageCreated {
+      _id
+      title
+    }
+  }
+`;
 
 let socket: Socket;
 
 interface PagesListSideBarProps {
-    pages: Page[];
     bookId: string;
 }
 
-export default function PagesListSideBar({ pages, bookId }: PagesListSideBarProps) {
+export default function PagesListSideBar({ bookId }: PagesListSideBarProps) {
     const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
     const [isExpandedLoaded, setIsExpandedLoaded] = useState(false);
     const [pagesFlat, setPagesFlat] = useState<Page[]>([]); // Плоский массив страниц
@@ -26,8 +35,13 @@ export default function PagesListSideBar({ pages, bookId }: PagesListSideBarProp
     const menuRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
     const pathname = usePathname();
+    const { data: newData } = useSubscription(PAGE_CREATED_SUBSCRIPTION);
 
     useEffect(() => {
+        if (newData?.pageCreated) {
+            setPagesFlat((prev) => [...prev, newData.pageCreated]);
+            console.log("GraphSubPages", newData)
+        }
         // Инициализация WebSocket с динамическим bookId
         socket = io(`${process.env.NEXT_PUBLIC_BAOBOOX_API_HTTP}`, { query: { bookId } });
 
@@ -39,14 +53,13 @@ export default function PagesListSideBar({ pages, bookId }: PagesListSideBarProp
 
         // Обработчики событий
         const handlePagesFlat = (pages: Page[]) => {
-            console.log('Received flat pages list:', pages);
             setPagesFlat(pages);
         };
 
-        const handlePageAdded = (newPage: Page) => {
-            console.log('Page added:', newPage);
-            setPagesFlat((prevPages) => [...prevPages, newPage]);
-        };
+        // const handlePageAdded = (newPage: Page) => {
+        //     console.log('Page added:', newPage);
+        //     setPagesFlat((prevPages) => [...prevPages, newPage]);
+        // };
 
         const handlePageRemoved = (removedPageId: string) => {
             console.log('Page removed:', removedPageId);
@@ -65,7 +78,7 @@ export default function PagesListSideBar({ pages, bookId }: PagesListSideBarProp
         // Устанавливаем обработчики событий
         socket.on('connect', handleConnect);
         socket.on('pages_flat', handlePagesFlat);
-        socket.on('page_added', handlePageAdded);
+        // socket.on('page_added', handlePageAdded);
         socket.on('page_removed', handlePageRemoved);
         socket.on('page_updated', handlePageUpdated);
 
@@ -73,12 +86,12 @@ export default function PagesListSideBar({ pages, bookId }: PagesListSideBarProp
         return () => {
             socket.off('connect', handleConnect);
             socket.off('pages_flat', handlePagesFlat);
-            socket.off('page_added', handlePageAdded);
+            // socket.off('page_added', handlePageAdded);
             socket.off('page_removed', handlePageRemoved);
             socket.off('page_updated', handlePageUpdated);
             socket.disconnect(); // Отключение WebSocket
         };
-    }, [bookId]);
+    }, [bookId, newData]);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {

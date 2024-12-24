@@ -1,4 +1,4 @@
-import { fetchGraphQL } from './apiClient'
+import { fetchGraphQL } from './api-client'
 import { Book } from '../utils/interfaces';
 
 export default class BookServise {

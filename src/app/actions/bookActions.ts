@@ -1,6 +1,6 @@
 'use server';
 
-import BookService from "../services/bookService";
+import BookService from "../services/book-service";
 
 const bookService = new BookService()
 

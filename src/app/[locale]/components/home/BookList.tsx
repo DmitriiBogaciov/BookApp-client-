@@ -1,5 +1,5 @@
 import { Book } from '@/app/utils/interfaces';
-import BookService from '@/app/services/bookService';
+import BookService from '@/app/services/book-service';
 
 const bookService = new BookService();
 

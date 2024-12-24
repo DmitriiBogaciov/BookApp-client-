@@ -1,6 +1,6 @@
 'use server';
 
-import PageService from "../services/pageService";
+import PageService from "../services/page-service";
 import { Page } from "../utils/interfaces";
 
 const pageService = new PageService();
