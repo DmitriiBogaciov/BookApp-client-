@@ -7,10 +7,11 @@ import CreatePageButton from './create-page-button';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface SrudioBookSideBarProps {
+    pages: Page[]
     bookId: string
 }
 
-const StudioBookSideBar = ({ bookId }: SrudioBookSideBarProps) => {
+const StudioBookSideBar = ({ bookId, pages }: SrudioBookSideBarProps) => {
 
     const [isSidebarOpen, setisSidebarOpen] = useState(true);
 
@@ -45,7 +46,7 @@ const StudioBookSideBar = ({ bookId }: SrudioBookSideBarProps) => {
                                 <CloseIcon />
                             </button>
                         </div>
-                        <PagesListSideBar bookId={bookId} />
+                        <PagesListSideBar pages={pages} bookId={bookId} />
                         <CreatePageButton bookId={bookId}>
                             <span className="pl-2 pt-1 pb-1 pr-2 w-full inline-block hover:bg-gray-200 cursor-pointer">
                                 + create page

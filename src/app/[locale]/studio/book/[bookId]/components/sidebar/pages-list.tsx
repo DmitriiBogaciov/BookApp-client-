@@ -17,6 +17,27 @@ const PAGE_CREATED_SUBSCRIPTION = gql`
     pageCreated {
       _id
       title
+      bookId
+      parentId
+    }
+  }
+`;
+
+const PAGE_REMOVED_SUBSCRIPTION = gql`
+  subscription {
+    pageRemoved {
+      _id
+    }
+  }
+`;
+
+const PAGE_UPDATED_SUBSCRIPTION = gql`
+  subscription {
+    pageUpdated{
+      _id
+      title
+      bookId
+      parentId
     }
   }
 `;
@@ -24,74 +45,47 @@ const PAGE_CREATED_SUBSCRIPTION = gql`
 let socket: Socket;
 
 interface PagesListSideBarProps {
+    pages: Page[]
     bookId: string;
 }
 
-export default function PagesListSideBar({ bookId }: PagesListSideBarProps) {
+export default function PagesListSideBar({ bookId, pages }: PagesListSideBarProps) {
     const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
     const [isExpandedLoaded, setIsExpandedLoaded] = useState(false);
-    const [pagesFlat, setPagesFlat] = useState<Page[]>([]); // Плоский массив страниц
+    const [pagesFlat, setPagesFlat] = useState<Page[]>(pages); // Плоский массив страниц
     const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: number } | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
     const pathname = usePathname();
-    const { data: newData } = useSubscription(PAGE_CREATED_SUBSCRIPTION);
+    const { data: createdPage } = useSubscription(PAGE_CREATED_SUBSCRIPTION);
+    const { data: removedPage } = useSubscription(PAGE_REMOVED_SUBSCRIPTION);
+    const { data: updatedPage } = useSubscription(PAGE_UPDATED_SUBSCRIPTION)
 
     useEffect(() => {
-        if (newData?.pageCreated) {
-            setPagesFlat((prev) => [...prev, newData.pageCreated]);
-            console.log("GraphSubPages", newData)
-        }
-        // Инициализация WebSocket с динамическим bookId
-        socket = io(`${process.env.NEXT_PUBLIC_BAOBOOX_API_HTTP}`, { query: { bookId } });
-
-        // Обработчик успешного подключения
-        const handleConnect = () => {
-            console.log(`Connected to WebSocket server with bookId: ${bookId}`);
-            socket.emit('get_pages', { bookId }); // Запрашиваем плоский список страниц
-        };
-
-        // Обработчики событий
-        const handlePagesFlat = (pages: Page[]) => {
-            setPagesFlat(pages);
-        };
-
-        // const handlePageAdded = (newPage: Page) => {
-        //     console.log('Page added:', newPage);
-        //     setPagesFlat((prevPages) => [...prevPages, newPage]);
-        // };
-
-        const handlePageRemoved = (removedPageId: string) => {
-            console.log('Page removed:', removedPageId);
-            setPagesFlat((prevPages) => prevPages.filter(page => page._id !== removedPageId));
-        };
-
-        const handlePageUpdated = (updatedPage: Page) => {
-            console.log('Page updated:', updatedPage);
+        console.log('updatedPage recieved', updatedPage)
+        if (updatedPage?.pageUpdated) {
+            const newPage = updatedPage.pageUpdated
             setPagesFlat((prevPages) =>
                 prevPages.map((page) =>
-                    page._id === updatedPage._id ? updatedPage : page
+                    page._id === newPage._id ? newPage : page
                 )
             );
-        };
+        }
+    }, [updatedPage]);
 
-        // Устанавливаем обработчики событий
-        socket.on('connect', handleConnect);
-        socket.on('pages_flat', handlePagesFlat);
-        // socket.on('page_added', handlePageAdded);
-        socket.on('page_removed', handlePageRemoved);
-        socket.on('page_updated', handlePageUpdated);
+    useEffect(() => {
+        if (createdPage?.pageCreated) {
+            setPagesFlat((prev) => [...prev, createdPage.pageCreated]);
+            console.log("GraphSubPages", createdPage)
+        }
+    }, [createdPage]);
 
-        // Очищаем обработчики при размонтировании или изменении bookId
-        return () => {
-            socket.off('connect', handleConnect);
-            socket.off('pages_flat', handlePagesFlat);
-            // socket.off('page_added', handlePageAdded);
-            socket.off('page_removed', handlePageRemoved);
-            socket.off('page_updated', handlePageUpdated);
-            socket.disconnect(); // Отключение WebSocket
-        };
-    }, [bookId, newData]);
+    useEffect(() => {
+        if (removedPage?.pageRemoved) {
+            setPagesFlat((prevPages) => prevPages.filter(page => page._id !== removedPage.pageRemoved._id));
+            console.log("Removed page", removedPage.pageRemoved)
+        }
+    }, [removedPage]);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -162,9 +156,9 @@ export default function PagesListSideBar({ bookId }: PagesListSideBarProps) {
 
                 const deletedIds = gatherChildrenIds(id, pagesFlat);
 
-                setPagesFlat((prevPages) =>
-                    prevPages.filter(page => !deletedIds.includes(page._id))
-                );
+                // setPagesFlat((prevPages) =>
+                //     prevPages.filter(page => !deletedIds.includes(page._id))
+                // );
 
                 // Если текущая страница — удаляемая страница или её подстраница
                 if (deletedIds.some(deletedId => pathname.includes(deletedId))) {

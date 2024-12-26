@@ -10,7 +10,7 @@ interface PageTitleProps {
 
 export default function PageTitle({ title, pageId }: PageTitleProps) {
     const [inputValue, setInputValue] = useState<string>("");
-    
+
     useEffect(() => {
         if (title) {
             setInputValue(title);
@@ -20,7 +20,7 @@ export default function PageTitle({ title, pageId }: PageTitleProps) {
     const handleUpdateTitle = () => {
         if (!title) return;
 
-        updatePageTitle(pageId, inputValue); 
+        updatePageTitle(pageId, inputValue);
     };
 
     const handleInputBlur = () => {
@@ -39,13 +39,17 @@ export default function PageTitle({ title, pageId }: PageTitleProps) {
     };
 
     return (
-        <input
-            type="text"
-            value={inputValue}
-            placeholder={title ? title : "Untitled"}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            onBlur={handleInputBlur}
-        />
+        <div>
+            <h5>
+                <input
+                    type="text"
+                    value={inputValue}
+                    placeholder={title ? title : "Untitled"}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    onBlur={handleInputBlur}
+                />
+            </h5>
+        </div>
     );
 }
