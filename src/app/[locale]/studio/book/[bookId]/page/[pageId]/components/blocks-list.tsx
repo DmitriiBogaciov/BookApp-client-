@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { Block } from '@/app/utils/interfaces';
-import BlockComp from './block';
+import BlockRenderer from './block-render';
 import { getBlocksForPage } from '@/app/actions/blockActions';
-import socket from '@/app/utils/socket'; // Импортируем общий socket
+import socket from '@/app/utils/socket'; // Общий socket для подключения
 
 interface BlocksListProps {
     pageId: string;
@@ -21,7 +21,7 @@ export default function BlocksList({ pageId }: BlocksListProps) {
             setError(null);
 
             try {
-                const fetchedBlocks = await getBlocksForPage(pageId);
+                const fetchedBlocks = await getBlocksForPage(pageId); // Получаем блоки с сервера
                 setBlocks(fetchedBlocks);
             } catch (err) {
                 console.error('Ошибка при загрузке блоков:', err);
@@ -31,12 +31,12 @@ export default function BlocksList({ pageId }: BlocksListProps) {
             }
         };
 
-        fetchBlocks();
+        fetchBlocks(); // Загружаем блоки при монтировании компонента
 
-        // Подключаемся к WebSocket и присоединяемся к странице
+        // Подключаемся к WebSocket
         socket.emit('join_page', pageId);
 
-        // Слушаем события обновления блоков
+        // Обработчик обновления одного блока
         const handleBlockUpdate = ({ blockId, content }: { blockId: string; content: any }) => {
             setBlocks((prevBlocks) =>
                 prevBlocks.map((block) =>
@@ -45,17 +45,19 @@ export default function BlocksList({ pageId }: BlocksListProps) {
             );
         };
 
-        const handleBlockState = (updatedBlocks: Block[]) => {
-            setBlocks(updatedBlocks);
-        };
+        // Обработчик синхронизации всех блоков
+        // const handleBlockState = (updatedBlocks: Block[]) => {
+        //     setBlocks(updatedBlocks);
+        // };
 
+        // Устанавливаем слушатели событий
         socket.on('block_updated', handleBlockUpdate);
-        socket.on('block_state', handleBlockState);
+        // socket.on('block_state', handleBlockState);
 
+        // Удаляем обработчики при размонтировании
         return () => {
-            // Удаляем обработчики при размонтировании
             socket.off('block_updated', handleBlockUpdate);
-            socket.off('block_state', handleBlockState);
+            // socket.off('block_state', handleBlockState);
         };
     }, [pageId]);
 
@@ -63,9 +65,12 @@ export default function BlocksList({ pageId }: BlocksListProps) {
     if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
     return (
-        <ul>
+        <ul className="block-list">
             {blocks.map((block) => (
-                <BlockComp key={block._id} block={block} />
+                <BlockRenderer
+                    key={block._id}
+                    block={block}
+                />
             ))}
         </ul>
     );
