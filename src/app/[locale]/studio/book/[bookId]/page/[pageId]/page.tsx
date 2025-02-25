@@ -10,22 +10,27 @@ const blockService = new BlockService;
 export default async function Page({
     params,
 }: {
-    params: Promise<{ pageId: string }>
+    // params: Promise<{ pageId: string }>
+    params: { pageId: string }
 }) {
     try {
-        const par = await params
-        // const blocks = await blockService.getBlocksForPage(par.pageId)
-        const page = await pageService.getOnePage(par.pageId)
+        // const par = await params
+        const pageId = params.pageId;
+        const blocks = await blockService.getBlocksForPage(pageId)
+        // const page = await pageService.getOnePage(pageId)
+
+        
 
         return (
-            <div className=''>
-              <BlocksList pageId={par.pageId}/>
+            <div>
+              <BlocksList pageId={pageId}/>
             </div>
         )
     } catch (error) {
-        
+        return (
+            <div>
+              <p>Error loading Blocks</p>
+            </div>
+        )  
     }
-
-
-
 }

@@ -59,7 +59,7 @@ const StudioSideBar = ({ Books }: StudioSideBarProps) => {
   return (
     <div
       className={`h-full bg-gray-100 border-r border-gray-200 shadow-lg transition-all overflow-hidden duration-200 ease-in-out 
-        ${isSidebarOpen ? 'w-44 p-2' : 'w-14'}`}
+        ${isSidebarOpen ? 'min-w-44 p-2' : 'min-w-14'}`}
     >
       {
         !isSidebarOpen && (

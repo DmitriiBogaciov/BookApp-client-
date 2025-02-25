@@ -17,7 +17,7 @@ export default async function StudioBookLayout({
     // console.log("Pages: ", JSON.stringify(pages, null, 2))
 
     return (
-        <div className='flex h-screen'>
+        <div className='flex flex-1 h-screen'>
             <ApolloClientProvider>
                 <Sidebar pages={pages} bookId={params.bookId} />
                 {children}

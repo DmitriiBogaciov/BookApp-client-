@@ -24,7 +24,7 @@ export default async function StudioPageLayout({
         const page = await pageService.getOnePage(par.pageId)
 
         return (
-            <div className=''>
+            <div className='page-layout flex-1'>
                 <Navbar>
                     <Nav>
                         <NavItem>

@@ -26,8 +26,6 @@ export const fetchGraphQL = async (query: string, variables: any, options: Fetch
     variables,
   });
 
-  // console.log('Request body:', body);
-
   const fetchOptions: RequestInit = {
     method: 'POST',
     headers,
@@ -57,8 +55,7 @@ export const fetchGraphQL = async (query: string, variables: any, options: Fetch
     if (!data) {
       throw new Error('No data returned from GraphQL API.');
     }
-
-    // console.log("Fetched data: ", data)
+    
     return data;
   } catch (error) {
     console.error('Error in fetchGraphQL:', error);

@@ -24,5 +24,5 @@ export interface Block {
     title: string;
     pageId: string;
     order: string;
-    content: RawDraftContentState;
+    content: JSON;
 }

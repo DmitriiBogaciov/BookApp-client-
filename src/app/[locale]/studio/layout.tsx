@@ -10,6 +10,7 @@ export default async function StudioLayout({
 }: {
     children: React.ReactNode
 }) {
+    try {
     const session = await getSession();
     const books = session ? await bookService.booksForCreators() : null;
     return (
@@ -22,4 +23,11 @@ export default async function StudioLayout({
             )}
         </SessionGuard>
     )
+    } catch (error) {
+        return (
+            <div>
+                <h1>Some error when loading books</h1>
+            </div>
+        )
+    }
 }

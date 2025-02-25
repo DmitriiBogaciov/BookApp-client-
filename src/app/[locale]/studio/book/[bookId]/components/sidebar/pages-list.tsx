@@ -8,13 +8,12 @@ import AddIcon from '@mui/icons-material/Add';
 import { removePage } from '@/app/actions/pageActions';
 import { useRouter, usePathname } from '@/i18n/routing';
 import CreatePageButton from "./create-page-button";
-import { io, Socket } from 'socket.io-client';
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { gql, useSubscription } from '@apollo/client';
 
 const PAGE_CREATED_SUBSCRIPTION = gql`
-  subscription {
-    pageCreated {
+  subscription PageCreated($bookId: String!) {
+    pageCreated(bookId: $bookId){
       _id
       title
       bookId
@@ -42,8 +41,6 @@ const PAGE_UPDATED_SUBSCRIPTION = gql`
   }
 `;
 
-let socket: Socket;
-
 interface PagesListSideBarProps {
     pages: Page[]
     bookId: string;
@@ -57,7 +54,7 @@ export default function PagesListSideBar({ bookId, pages }: PagesListSideBarProp
     const menuRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
     const pathname = usePathname();
-    const { data: createdPage } = useSubscription(PAGE_CREATED_SUBSCRIPTION);
+    const { data: createdPage } = useSubscription(PAGE_CREATED_SUBSCRIPTION, {variables: {bookId}});
     const { data: removedPage } = useSubscription(PAGE_REMOVED_SUBSCRIPTION);
     const { data: updatedPage } = useSubscription(PAGE_UPDATED_SUBSCRIPTION)
 
