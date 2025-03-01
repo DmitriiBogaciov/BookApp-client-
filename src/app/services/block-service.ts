@@ -2,8 +2,13 @@ import { fetchGraphQL } from './api-client'
 import { Block } from '../utils/interfaces';
 import { RawDraftContentState } from 'draft-js';
 
-export default class BlockServise {
+export interface CreateDtoIn {
+  order: number,
+  pageId: string,
+  type?: string,
+}
 
+export default class BlockService {
   //   getAllBooks = async () => {
   //     const revalidate = undefined;
   //     const query = `
@@ -116,53 +121,62 @@ export default class BlockServise {
     return data.updateBlock;
   };
 
-  //   createBook = async () => {
-  //     const revalidate = undefined;
-  //     const mutation = `
-  //     mutation CreateBook($input: CreateBookInput!) {
-  //       createBook(createBookInput: $input) {
-  //         _id
-  //         title
-  //         }
-  //       }
-  //     `;
-  //     const variables = {
-  //       input: {}
-  //     }
+    createBlock = async (DtoIn: CreateDtoIn) => {
+      const revalidate = undefined;
+      const mutation = `
+      mutation CreateBlock($input: CreateBlockInput!) {
+        createBlock(createBlockInput: $input) {
+          _id
+          order
+          type
+          content
+          }
+        }
+      `;
+      const variables = {
+        input: {
+          order: DtoIn.order,
+          pageId: DtoIn.pageId,
+          type: DtoIn.type
+        }
+      }
 
-  //     try {
-  //       const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
-  //       return data.createBook;
-  //     } catch (error) {
-  //       console.error("Error creating book:", error);
-  //       return {}
-  //     }
-  //   }
+      console.log("variables to create block", variables)
 
-  //   removeOneBook = async (id: string) => {
-  //     const revalidate = undefined;
-  //     const mutation = `
-  //     mutation RemoveBook($id: String!) {
-  //       removeBook(id: $id) {
-  //         deletedCount
-  //       }
-  //     }`;
+      try {
+        console.log(`Block create data: ${variables}`)
+        const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
+        return data.createBlock;
+      } catch (error) {
+        console.error("Error creating Block:", error);
+        return {}
+      }
+    }
 
-  //     const variables = {
-  //       id: id
-  //     }
+    removeOneBlock = async (id: string) => {
+      const revalidate = undefined;
+      const mutation = `
+      mutation RemoveBlock($id: String!) {
+        removeBlock(id: $id) {
+          deletedCount
+        }
+      }`;
 
-  //     try {
-  //       const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
+      const variables = {
+        id: id
+      }
 
-  //       if (!data || !data.removeBook) {
-  //         throw new Error("Failed to remove the book");
-  //       }
+      try {
+        const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
 
-  //       return data.removeBook;
-  //     } catch (error) {
-  //       console.error("Error removing book:", error);
-  //       return {};
-  //     }
-  //   }
+        if (!data || !data.removeBlock) {
+          throw new Error("Failed to remove the book");
+        }
+
+        return data.removeBlock;
+      } catch (error) {
+        console.error("Error removing block:", error);
+        return {};
+      }
+    }
 }

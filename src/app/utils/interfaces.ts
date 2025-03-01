@@ -23,6 +23,6 @@ export interface Block {
     type: string;
     title: string;
     pageId: string;
-    order: string;
-    content: JSON;
+    order: number;
+    content: string;
 }

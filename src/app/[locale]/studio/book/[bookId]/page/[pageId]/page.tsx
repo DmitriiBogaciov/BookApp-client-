@@ -1,7 +1,6 @@
 import React from 'react';
 import BlocksList from './components/blocks-list';
 import BlockService from '@/app/services/block-service';
-import PageTitle from './components/page-title';
 import PageService from "@/app/services/page-service";
 
 const pageService = new PageService();
@@ -19,11 +18,9 @@ export default async function Page({
         const blocks = await blockService.getBlocksForPage(pageId)
         // const page = await pageService.getOnePage(pageId)
 
-        
-
         return (
             <div>
-              <BlocksList pageId={pageId}/>
+              <BlocksList blocks={blocks} pageId={pageId}/>
             </div>
         )
     } catch (error) {

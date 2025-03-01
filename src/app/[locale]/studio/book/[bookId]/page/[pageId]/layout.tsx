@@ -24,15 +24,17 @@ export default async function StudioPageLayout({
         const page = await pageService.getOnePage(par.pageId)
 
         return (
-            <div className='page-layout flex-1'>
-                <Navbar>
-                    <Nav>
-                        <NavItem>
-                            <PageTitle title={page.title} pageId={page._id} />
-                        </NavItem>
-                    </Nav>
-                </Navbar>
-                {children}
+            <div className='page-layout-0 flex justify-center w-full'>
+                <div className='page-layout-1 flex-1 max-w-4xl border'>
+                    <Navbar>
+                        <Nav>
+                            <NavItem>
+                                <PageTitle title={page.title} pageId={page._id} />
+                            </NavItem>
+                        </Nav>
+                    </Navbar>
+                    {children}
+                </div>
             </div>
         )
     } catch (error) {

@@ -20,7 +20,7 @@ const StudioBookTitle = ({ id }: StudioBookTitleProps) => {
         const fetchBook = async () => {
             try {
                 const result = await getBookAction(id)
-                console.log(result)
+                // console.log(result)
                 setBook(result);
             } catch (error) {
                 console.error("Failed to fetch the book:", error);

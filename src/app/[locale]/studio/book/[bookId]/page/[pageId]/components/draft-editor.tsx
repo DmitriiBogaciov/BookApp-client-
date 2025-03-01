@@ -1,13 +1,13 @@
 'use client';
 
-import { Editor, EditorState, RawDraftContentState, convertFromRaw, convertToRaw } from 'draft-js';
+import { Editor, EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import { useState, useEffect, useRef } from 'react';
-import socket from '@/app/utils/socket'; // Import socket
+import socket from '@/app/utils/socket'; // Общий socket для подключения
 import { Block } from '@/app/utils/interfaces';
 
 interface DraftEditorProps {
-    block: { content: any; _id: string; pageId: string }; // ID of the page for socket operations
+    block: { content: any; _id: string; pageId: string }; // ID страницы для socket операций
 }
 
 export default function DraftEditor({ block }: DraftEditorProps) {
@@ -16,7 +16,7 @@ export default function DraftEditor({ block }: DraftEditorProps) {
             const rawContent = typeof content === 'string' ? JSON.parse(content) : content;
             return EditorState.createWithContent(convertFromRaw(rawContent));
         } catch (error) {
-            console.error("Failed to parse block.content:", error);
+            console.error("Не удалось разобрать block.content:", error);
             return EditorState.createEmpty();
         }
     };
@@ -24,73 +24,63 @@ export default function DraftEditor({ block }: DraftEditorProps) {
     const [editorState, setEditorState] = useState(() =>
         block.content ? parseContent(block.content) : EditorState.createEmpty()
     );
-    const [saving, setSaving] = useState(false);
+
+    const [isLocalUpdate, setIsLocalUpdate] = useState(false);
+    const [isServerUpdate, setIsServerUpdate] = useState(false) // Добавим состояние для локальных изменений
     const previousContentRef = useRef<string | null>(null);
-    const isLocalUpdateRef = useRef(false); // Флаг для отслеживания локальных изменений
 
-    // Сохраняем изменения на сервер
     useEffect(() => {
-        const saveContent = () => {
-            const rawContent = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-            console.log('Saving changes')
-            // Если содержимое не изменилось, ничего не делаем
-            if (previousContentRef.current === rawContent) {
+        // Обработчик изменений с сервера
+        const handleBlockUpdate = (updatedBlock: { _id: string; content: string }) => {
+            // Если локальные изменения, не применяем обновления с сервера
+            if (isLocalUpdate) {
+                console.log("🚫 Локальное изменение, не обновляем блок с сервера");
                 return;
             }
 
-            previousContentRef.current = rawContent;
-            isLocalUpdateRef.current = true; // Устанавливаем флаг, чтобы игнорировать входящее событие
+            setIsServerUpdate(true)
 
-            setSaving(true);
-
-            try {
-                socket.emit('block_update', {
-                    blockId: block._id,
-                    pageId: block.pageId,
-                    content: rawContent,
-                });
-            } catch (error) {
-                console.error('Failed to emit block update:', error);
-            } finally {
-                setSaving(false);
-            }
-        };
-
-        saveContent();
-    }, [editorState, block._id, block.pageId]);
-
-    useEffect(() => {
-        const handleBlockUpdate = (updatedBlock: Block) => {
-            if (isLocalUpdateRef.current) {
-                // Если обновление пришло из локального изменения, игнорируем его
-                isLocalUpdateRef.current = false;
-                return;
-            }
-
-            console.log("Updated block", updatedBlock._id, updatedBlock.content);
-
-            try {
-                const rawContent = typeof updatedBlock.content === 'string'
-                    ? JSON.parse(updatedBlock.content)
-                    : updatedBlock.content;
-
-                const updatedEditorState = EditorState.createWithContent(convertFromRaw(rawContent));
-
-                // Обновляем состояние редактора
-                setEditorState((prevState) =>
-                    EditorState.forceSelection(updatedEditorState, prevState.getSelection()) // Сохраняем текущую позицию курсора
-                );
-            } catch (error) {
-                console.error("Failed to parse or update editorState:", error);
-            }
+            console.log(`📩 Пришло обновление от сервера для блока ${updatedBlock._id}`);
+            console.log("⚡ Контент с сервера:", updatedBlock.content);
+            setEditorState(parseContent(updatedBlock.content)); // Обновляем состояние редактора
         };
 
         socket.on('block_updated', handleBlockUpdate);
 
         return () => {
-            socket.off('block_updated', handleBlockUpdate); // Очистка обработчиков
+            socket.off('block_updated', handleBlockUpdate);
         };
-    }, []);
+    }, [isLocalUpdate]);
+
+    useEffect(() => {
+        // Сохраняем контент на сервер
+        if(isServerUpdate) {
+            setIsServerUpdate(false)
+            return
+        }
+        const timeout = setTimeout(() => {
+            const rawContent = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+
+            if (previousContentRef.current === rawContent) return;
+
+            previousContentRef.current = rawContent;
+            setIsLocalUpdate(true); // Устанавливаем флаг локального изменения
+
+            socket.emit('block_update', {
+                blockId: block._id,
+                pageId: block.pageId,
+                content: rawContent,
+            });
+
+            // Сброс флага локального изменения после отправки на сервер
+            setTimeout(() => {
+                setIsLocalUpdate(false);
+            }, 1000); // Флаг сбрасывается через 1 секунду (это время на возможное серверное обновление)
+        }, 500); // Таймаут на 500 мс
+
+        return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editorState]);
 
     return (
         <div className='border'>
@@ -98,9 +88,7 @@ export default function DraftEditor({ block }: DraftEditorProps) {
                 editorState={editorState}
                 onChange={setEditorState}
                 placeholder="Start to type... Draft.js"
-
             />
-            {/* {saving && <p className="text-sm text-gray-500">Saving...</p>} */}
         </div>
     );
 }
