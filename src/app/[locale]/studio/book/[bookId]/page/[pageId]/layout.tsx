@@ -25,7 +25,7 @@ export default async function StudioPageLayout({
 
         return (
             <div className='page-layout-0 flex justify-center w-full'>
-                <div className='page-layout-1 flex-1 max-w-4xl border'>
+                <div className='page-layout-1 flex-1 max-w-4xl'>
                     <Navbar>
                         <Nav>
                             <NavItem>

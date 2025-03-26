@@ -4,7 +4,6 @@ import { Editor, EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import { useState, useEffect, useRef } from 'react';
 import socket from '@/app/utils/socket'; // Общий socket для подключения
-import { Block } from '@/app/utils/interfaces';
 
 interface DraftEditorProps {
     block: { content: any; _id: string; pageId: string }; // ID страницы для socket операций
@@ -32,25 +31,30 @@ export default function DraftEditor({ block }: DraftEditorProps) {
     useEffect(() => {
         // Обработчик изменений с сервера
         const handleBlockUpdate = (updatedBlock: { _id: string; content: string }) => {
+            // Проверяем, относится ли обновление к текущему блоку
+            if (updatedBlock._id !== block._id) {
+                return; // Если это не наш блок — игнорируем обновление
+            }
+    
             // Если локальные изменения, не применяем обновления с сервера
             if (isLocalUpdate) {
-                console.log("🚫 Локальное изменение, не обновляем блок с сервера");
+                console.log(`🚫 Локальное изменение в блоке ${block._id}, не обновляем`);
                 return;
             }
-
-            setIsServerUpdate(true)
-
+    
+            setIsServerUpdate(true);
+    
             console.log(`📩 Пришло обновление от сервера для блока ${updatedBlock._id}`);
             console.log("⚡ Контент с сервера:", updatedBlock.content);
             setEditorState(parseContent(updatedBlock.content)); // Обновляем состояние редактора
         };
-
+    
         socket.on('block_updated', handleBlockUpdate);
-
+    
         return () => {
             socket.off('block_updated', handleBlockUpdate);
         };
-    }, [isLocalUpdate]);
+    }, [isLocalUpdate, block._id]);
 
     useEffect(() => {
         // Сохраняем контент на сервер
@@ -83,7 +87,7 @@ export default function DraftEditor({ block }: DraftEditorProps) {
     }, [editorState]);
 
     return (
-        <div className='border'>
+        <div className='min-h-[50px] w-full overflow-hidden'>
             <Editor
                 editorState={editorState}
                 onChange={setEditorState}
