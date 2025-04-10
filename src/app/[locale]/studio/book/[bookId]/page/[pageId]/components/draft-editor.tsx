@@ -3,7 +3,9 @@
 import { Editor, EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import { useState, useEffect, useRef } from 'react';
-import socket from '@/app/utils/socket'; // Общий socket для подключения
+import socket from '@/app/utils/socket';
+import CreateAutocompletePlugin from './menu-editor-draft/autocomplete';
+
 
 interface DraftEditorProps {
     block: { content: any; _id: string; pageId: string }; // ID страницы для socket операций
@@ -23,6 +25,8 @@ export default function DraftEditor({ block }: DraftEditorProps) {
     const [editorState, setEditorState] = useState(() =>
         block.content ? parseContent(block.content) : EditorState.createEmpty()
     );
+    
+    const autocompletePlugin = CreateAutocompletePlugin(setEditorState, () => editorState);
 
     const [isLocalUpdate, setIsLocalUpdate] = useState(false);
     const [isServerUpdate, setIsServerUpdate] = useState(false) // Добавим состояние для локальных изменений
@@ -87,12 +91,17 @@ export default function DraftEditor({ block }: DraftEditorProps) {
     }, [editorState]);
 
     return (
-        <div className='min-h-[50px] w-full overflow-hidden'>
+        <div className='min-h-[50px] w-full'>
             <Editor
                 editorState={editorState}
-                onChange={setEditorState}
+                onChange={autocompletePlugin.onChange}
                 placeholder="Start to type... Draft.js"
+                handleBeforeInput={autocompletePlugin.handleBeforeInput}
+                handleKeyCommand={autocompletePlugin.handleKeyCommand}
+                keyBindingFn={autocompletePlugin.keyBindingFn}
+                ref={autocompletePlugin.ref}
             />
+            {autocompletePlugin.renderSuggestions()}
         </div>
     );
 }
