@@ -20,8 +20,7 @@ export default async function StudioPageLayout({
 }) {
     try {
         const par = await params
-        // const blocks = await blockService.getBlocksForPage(par.pageId)
-        const page = await pageService.getOnePage(par.pageId)
+        const page = await pageService.getOnePage(par.pageId, ['_id', 'title', 'order', 'content'])
 
         return (
             <div className='page-layout-0 flex justify-center w-full'>

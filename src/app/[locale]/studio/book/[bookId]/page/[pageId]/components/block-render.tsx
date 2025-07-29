@@ -22,8 +22,8 @@ export default function BlockRenderer({ block }: BlockRendererProps) {
                     }}
                 />
             );
-        // case 'slate':
-        //     return <SlateEditor/>;
+        case 'slate':
+            return <SlateEditor/>;
         default:
             // return <p>Unsupported editor type: {block.type}</p>;
             return

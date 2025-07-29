@@ -11,7 +11,7 @@ export default class BookServise {
           _id
           title
           description
-          author
+          authors
         }
       }
     `;

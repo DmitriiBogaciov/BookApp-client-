@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/verify/page.tsx", "src/app/components/NavBar/TokenModal.jsx", "src/app/components/NavBar/NavBarMobile.jsx", "src/app/components/NavBar/NavBarDesktop.jsx", "src/app/components/NavBar/menuButton.jsx", "src/app/components/NavBar/MainNavBar.jsx", "src/app/components/NavBar/LogInButton.jsx", "src/app/layout.tsx", "src/config.ts", "next.config.js", "src/app/[locale]/studio/book/[bookId]/page/[pageId]/components/menu-editor-draft/autocomplete.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/verify/page.tsx", "src/app/components/NavBar/TokenModal.jsx", "src/app/components/NavBar/NavBarMobile.jsx", "src/app/components/NavBar/NavBarDesktop.jsx", "src/app/components/NavBar/menuButton.jsx", "src/app/components/NavBar/MainNavBar.jsx", "src/app/components/NavBar/LogInButton.jsx", "src/app/layout.tsx", "src/config.ts", "next.config.js", "src/app/[locale]/studio/book/[bookId]/page/[pageId]/components/menu-editor-draft/autocomplete.tsx"],
   "exclude": ["node_modules"]
 }

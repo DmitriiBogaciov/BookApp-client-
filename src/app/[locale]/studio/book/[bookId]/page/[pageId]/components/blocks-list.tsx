@@ -5,12 +5,13 @@ import { Block } from '@/app/utils/interfaces';
 import { createBlock, removeBlock } from '@/app/actions/blockActions';
 import { CreateDtoIn } from '@/app/services/block-service';
 import BlockRenderer from './block-render';
-import DeleteIcon from '@mui/icons-material/Delete';
 import socket from '@/app/utils/socket';
 import './loading.css';
 import DeleteBlockModal from './menu-block/delete-modal';
 import BlockDeleteButton from './menu-block/block-delete-button'
 import BlockMenu from './menu-block/block-menu';
+import BlockTypeSelector from './menu-block/block-type-selector';
+import { Modal } from 'reactstrap';
 
 interface BlocksListProps {
     blocks: Block[];
@@ -18,10 +19,14 @@ interface BlocksListProps {
 }
 
 export default function BlocksList({ blocks: initialBlocks, pageId }: BlocksListProps) {
+    const [isModalTypeOpen, setIsModalTypeOpen] = useState(false);
     const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
     const [blockToDelete, setBlockToDelete] = useState<string | null>(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [hoveredBlock, setHoveredBlock] = useState<{ id: string, x: number, y: number } | null>(null);
+    const [isBlockTypeSelectorOpen, setIsBlockTypeSelectorOpen] = useState(false);
+    const [pendingBlockOrder, setPendingBlockOrder] = useState<number | null>(null);
+
     useEffect(() => {
         socket.emit('join_page', pageId);
     }, [pageId]);
@@ -50,6 +55,22 @@ export default function BlocksList({ blocks: initialBlocks, pageId }: BlocksList
             }
         } catch (error) {
             console.log("Error creating a block", error);
+        }
+    };
+
+    const openBlockTypeSelector = (order: number) => {
+        setPendingBlockOrder(order);
+        setIsBlockTypeSelectorOpen(true);
+    };
+
+    const handleBlockTypeSelect = (type: string) => {
+        if (pendingBlockOrder !== null) {
+            handleBlockCreate({ 
+                order: pendingBlockOrder, 
+                pageId, 
+                type 
+            });
+            setPendingBlockOrder(null);
         }
     };
 
@@ -93,7 +114,7 @@ export default function BlocksList({ blocks: initialBlocks, pageId }: BlocksList
     return (
         <div className=''>
             {blocks.length === 0 ? (
-                <button onClick={() => handleBlockCreate({ order: 1, pageId, type: "draft" })}>
+                <button onClick={() => openBlockTypeSelector(1)}>
                     Create a new block
                 </button>
             ) : (
@@ -105,23 +126,16 @@ export default function BlocksList({ blocks: initialBlocks, pageId }: BlocksList
                         onMouseLeave={handleMouseBlockLeave}
                     >
                         <div className='flex'>
-                            {/* <div className='w-[40px]'>
-                            <BlockMenu
-                                styles='hidden group-hover:flex items-center justify-center'
-                                onDelete={() => confirmDeleteBlock(block._id)}
-                                onCreate={() => handleBlockCreate({ order: block.order, pageId, type: "draft" })}
-                            />
-                            </div> */}
                             <div className='flex-1 border border-gray-200 px-[20px]'>
                                 <BlockRenderer block={block} />
                             </div>
                         </div>
 
-                        {hoveredBlock && (
+                        {hoveredBlock && hoveredBlock.id === block._id && (
                             <BlockMenu
                                 classCSS='items-center justify-center'
                                 onDelete={() => confirmDeleteBlock(hoveredBlock.id)}
-                                onCreate={() => handleBlockCreate({ order: blocks.find(b => b._id === hoveredBlock.id)?.order || 1, pageId, type: "draft" })}
+                                onCreate={() => openBlockTypeSelector(blocks.find(b => b._id === hoveredBlock.id)?.order || 1)}
                                 style={{
                                     position: 'absolute',
                                     top: hoveredBlock.y,
@@ -138,6 +152,12 @@ export default function BlocksList({ blocks: initialBlocks, pageId }: BlocksList
                 onClose={() => setIsDeleteModalOpen(false)}
                 onConfirm={handleRemoveBlock}
                 message='Delete this block?'
+            />
+
+            <BlockTypeSelector
+                isOpen={isBlockTypeSelectorOpen}
+                onClose={() => setIsBlockTypeSelectorOpen(false)}
+                onSelectType={handleBlockTypeSelect}
             />
         </div>
     );

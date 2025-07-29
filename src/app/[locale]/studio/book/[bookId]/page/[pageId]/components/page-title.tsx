@@ -14,13 +14,18 @@ export default function PageTitle({ title, pageId }: PageTitleProps) {
     useEffect(() => {
         if (title) {
             setInputValue(title);
+        } else {
+            setInputValue("Untitled");
         }
     }, [title]);
 
     const handleUpdateTitle = () => {
-        if (!title) return;
-
-        updatePageTitle(pageId, inputValue);
+        if (!inputValue) {
+            updatePageTitle(pageId, "Untitled");
+        } else {
+            console.log("Updating title to:", inputValue);
+            updatePageTitle(pageId, inputValue);
+        }
     };
 
     const handleInputBlur = () => {

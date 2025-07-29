@@ -14,7 +14,6 @@ export default async function StudioBookLayout({
 }) {
 
     const pages = await pageService.getBookPages(params.bookId)
-    // console.log("Pages: ", JSON.stringify(pages, null, 2))
 
     return (
         <div className='flex flex-1 h-screen'>

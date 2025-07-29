@@ -4,10 +4,10 @@ import { Page } from '@/app/utils/interfaces';
 export default class PageService {
   private revalidate = undefined;
 
-  async getBookPages(bookId: string): Promise<Page[]> {
+  async getBookPages(bookId: string, parentIds?: string[]): Promise<Page[]> {
     const query = `
-      query GetPages($id: String!) {
-        pagesForBook(id: $id) {
+      query GetPages($id: String!, $parentIds: [String!]!) {
+        pagesForBook(id: $id, parentIds: $parentIds) {
           _id
           title
           order
@@ -15,7 +15,7 @@ export default class PageService {
         }
       }
     `;
-    const variables = { id: bookId };
+    const variables = { id: bookId, parentIds: parentIds || [] };
 
     try {
       const data = await fetchGraphQL(query, variables, { revalidate: this.revalidate, useToken: true });
@@ -27,12 +27,11 @@ export default class PageService {
     }
   }
 
-  async getOnePage(pageId: string): Promise<Page> {
+  async getOnePage(pageId: string, fields: string[]): Promise<Page> {
     const query = `
       query GetPage($id: String!) {
         page(id: $id) {
-          _id
-          title
+          ${fields}
         }
       }
     `;
