@@ -1,5 +1,5 @@
 'use client';
-import { useUser } from '@auth0/nextjs-auth0'; // Auth0 client hooks
+import { useUser } from '@auth0/nextjs-auth0';
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useEffect } from 'react';
 
@@ -20,7 +20,7 @@ const SessionGuard = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!user) {
-    router.push(`/api/auth/login?returnTo=${pathname}`);
+    router.push(`/auth/login?returnTo=${pathname}`);
   }
 
   return <>{children}</>;

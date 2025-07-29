@@ -6,11 +6,15 @@ import type { NextRequest } from 'next/server';
 const intlMiddleware = createMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  // Выполняем intl middleware
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith('/auth/')) {
+    return await auth0.middleware(request);
+  }
+
   const intlResponse = intlMiddleware(request);
   if (intlResponse) return intlResponse;
 
-  // Выполняем auth0 middleware
   return await auth0.middleware(request);
 }
 
@@ -18,6 +22,7 @@ export const config = {
   matcher: [
     '/',
     '/(ru|en)/:path*',
+    '/auth/:path*', // Добавляем Auth0 маршруты
     '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
 };
