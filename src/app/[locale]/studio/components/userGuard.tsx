@@ -1,5 +1,5 @@
 'use client';
-import { useUser } from '@auth0/nextjs-auth0/client'; // Auth0 client hooks
+import { useUser } from '@auth0/nextjs-auth0'; // Auth0 client hooks
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useEffect } from 'react';
 

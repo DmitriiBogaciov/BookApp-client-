@@ -15,11 +15,11 @@ import LogInButton from './LogInButton';
 import LocaleSwitcher from './LocaleSwitcher';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/navigation';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useUser } from '@auth0/nextjs-auth0';
 
 const NavBar = () => {
   const t = useTranslations('Nav');
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
   const [isOpen, setIsOpen] = useState(false); // Для управления открытием/закрытием меню
 
   const toggle = () => setIsOpen(!isOpen);

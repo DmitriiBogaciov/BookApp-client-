@@ -1,4 +1,4 @@
-import { getAccessToken } from '@auth0/nextjs-auth0';
+import { auth0 } from "@/lib/auth0";
 
 interface FetchOptions {
   id?: string;
@@ -13,8 +13,8 @@ export const fetchGraphQL = async (query: string, variables: any, options: Fetch
 
   if (options.useToken) {
     try {
-      const { accessToken } = await getAccessToken();
-      headers['Authorization'] = `Bearer ${accessToken}`;
+      const { token } = await auth0.getAccessToken();
+      headers['Authorization'] = `Bearer ${token}`;
     } catch (error) {
       console.error('Error fetching access token:', error);
       throw new Error('Failed to retrieve access token.');

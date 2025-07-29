@@ -1,10 +1,23 @@
 import createMiddleware from 'next-intl/middleware';
-import {routing} from './i18n/routing';
-import { NextResponse } from 'next/server';
- 
-export default createMiddleware(routing);
- 
+import { routing } from './i18n/routing';
+import { auth0 } from './lib/auth0';
+import type { NextRequest } from 'next/server';
+
+const intlMiddleware = createMiddleware(routing);
+
+export async function middleware(request: NextRequest) {
+  // Выполняем intl middleware
+  const intlResponse = intlMiddleware(request);
+  if (intlResponse) return intlResponse;
+
+  // Выполняем auth0 middleware
+  return await auth0.middleware(request);
+}
+
 export const config = {
-  // Match only internationalized pathnames
-  matcher: ['/', '/(ru|en)/:path*']
+  matcher: [
+    '/',
+    '/(ru|en)/:path*',
+    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+  ],
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { use } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useUser } from '@auth0/nextjs-auth0';
 import { NavLink } from 'reactstrap';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
@@ -23,7 +23,7 @@ const LogInButton = () => {
 
     if (!user) {
         return (
-            <NavLink href={`/api/auth/login?returnTo=${pathname}`} className="!text-slate-700" color='light'>
+            <NavLink href={`/auth/login?returnTo=${pathname}`} className="!text-slate-700" color='light'>
                 {t('Login')}
             </NavLink>
         );
@@ -31,7 +31,7 @@ const LogInButton = () => {
 
     if (user) {
         return (
-            <NavLink href="/api/auth/logout" className="!text-slate-700" color='light'>
+            <NavLink href="/auth/logout" className="!text-slate-700" color='light'>
                 {t('Logout')}
             </NavLink>
 

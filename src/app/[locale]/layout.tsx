@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import { Inter } from 'next/font/google';
 import { ReactNode } from 'react';
-import { UserProvider } from '@auth0/nextjs-auth0/client';
 import NavBar from './components/NavBar/NavBar'
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
@@ -38,12 +37,10 @@ export default async function LocaleLayout({
       </head>
       <body className={clsx(inter.className, 'flex h-full flex-col')}>
         <NextIntlClientProvider messages={messages}>
-          <UserProvider>
               <div className=''>
                 <NavBar />
               </div>
               {children}
-          </UserProvider>
         </NextIntlClientProvider>
       </body>
     </html>

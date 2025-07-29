@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.12.4",
-    "@auth0/nextjs-auth0": "^3.8.0",
+    "@auth0/nextjs-auth0": "^4.8.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@headlessui/react": "^2.2.0",
