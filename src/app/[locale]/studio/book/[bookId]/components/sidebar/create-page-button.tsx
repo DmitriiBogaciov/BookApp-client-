@@ -2,7 +2,7 @@
 
 import React, { PropsWithChildren } from 'react';
 import { createPage } from '@/app/actions/pageActions';
-import { useRouter, usePathname } from '@/i18n/routing';
+import { useRouter, usePathname } from '@/i18n/navigation';
 
 interface CreatePageButtonProps extends PropsWithChildren {
   bookId: string;

@@ -5,13 +5,14 @@ import PagesListSideBar from './pages-list';
 import StudioBookTitle from './book-title';
 import CreatePageButton from './create-page-button';
 import CloseIcon from '@mui/icons-material/Close';
+import { Book } from '@/app/utils/interfaces';
 
 interface SrudioBookSideBarProps {
     pages: Page[]
-    bookId: string
+    book: Book
 }
 
-const StudioBookSideBar = ({ bookId, pages }: SrudioBookSideBarProps) => {
+const StudioBookSideBar = ({ book, pages }: SrudioBookSideBarProps) => {
 
     const [isSidebarOpen, setisSidebarOpen] = useState(true);
 
@@ -41,13 +42,13 @@ const StudioBookSideBar = ({ bookId, pages }: SrudioBookSideBarProps) => {
                     }
                     <div className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
                         <div className="flex items-center font-bold">
-                            <StudioBookTitle id={bookId} />
+                            <StudioBookTitle id={book._id} />
                             <button onClick={toggleSidebar}>
                                 <CloseIcon />
                             </button>
                         </div>
-                        <PagesListSideBar pages={pages} bookId={bookId} />
-                        <CreatePageButton bookId={bookId}>
+                        <PagesListSideBar pages={pages} bookId={book._id} />
+                        <CreatePageButton bookId={book._id}>
                             <span className="pl-2 pt-1 pb-1 pr-2 w-full inline-block hover:bg-gray-200 cursor-pointer">
                                 + create page
                             </span>

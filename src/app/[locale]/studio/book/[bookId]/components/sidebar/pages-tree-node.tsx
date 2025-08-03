@@ -1,6 +1,6 @@
 import React from 'react';
 import { Page } from '@/app/utils/interfaces';
-import { Link } from '@/navigation';
+import { Link } from '@/i18n/navigation';
 import { SlOptions } from "react-icons/sl";
 import AddIcon from '@mui/icons-material/Add';
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";

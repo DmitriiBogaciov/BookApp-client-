@@ -11,11 +11,11 @@ export default async function Page({
     params,
 }: {
     // params: Promise<{ pageId: string }>
-    params: { pageId: string }
+    params: Promise<{ pageId: string }>
 }) {
     try {
         // const par = await params
-        const pageId = params.pageId;
+        const { pageId } = await params;
         const page = await pageService.getOnePage(pageId, ['content'])
         // const blocks = await blockService.getBlocksForPage(pageId)
         // const page = await pageService.getOnePage(pageId)

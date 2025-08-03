@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Page } from "@/app/utils/interfaces";
 import { removePage } from '@/app/actions/pageActions';
-import { useRouter, usePathname } from '@/i18n/routing';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { usePagesState } from './hooks/use-pageages-state';
 import { useExpandedNodes } from './hooks/use-expanded-nodes';
 import { PageTreeNode } from './pages-tree-node';

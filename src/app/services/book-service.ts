@@ -31,15 +31,14 @@ export default class BookServise {
     }
   };
 
-  getOneBook = async (id: string) => {
+  getOneBook = async (id: string, fields: string[]) => {
     const revalidate = undefined;
     const query = `
       query GetBook($id: String!) {
         book(id: $id) {
-          _id
-          title
+          ${fields}
+        }
       }
-    }
   `;
     const variables = {
       id: id
@@ -60,13 +59,12 @@ export default class BookServise {
     }
   };
 
-  booksForCreators = async () => {
+  booksForCreators = async (fields: string[]) => {
     const revalidate = undefined;
     const query = `
       query GetBooks {
         booksForAuthor {
-          _id
-          title
+          ${fields}
         }
       }
     `;
@@ -124,7 +122,7 @@ export default class BookServise {
       return data.createBook;
     } catch (error) {
       console.error("Error creating book:", error);
-      return {}
+      return error;
     }
   }
 

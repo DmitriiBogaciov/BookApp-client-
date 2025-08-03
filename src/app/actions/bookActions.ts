@@ -12,8 +12,8 @@ export async function createBook() {
     return await bookService.createBook()
 }
 
-export async function getBookAction(id: string) {
-    return await bookService.getOneBook(id);
+export async function getBookAction(id: string, fields: string[]) {
+    return await bookService.getOneBook(id, fields);
 }
 
 export async function removeOneBook(id:string){

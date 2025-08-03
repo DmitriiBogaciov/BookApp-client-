@@ -14,32 +14,31 @@ import {
 import LogInButton from './LogInButton';
 import LocaleSwitcher from './LocaleSwitcher';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/navigation';
+import { Link } from '@/i18n/navigation';
 import { useUser } from '@auth0/nextjs-auth0';
 
 const NavBar = () => {
   const t = useTranslations('Nav');
   const { user, isLoading } = useUser();
-  const [isOpen, setIsOpen] = useState(false); // Для управления открытием/закрытием меню
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
 
   return (
     <div className="nav-container">
       <Navbar color="light" light expand="md" className="bg-gray-500">
-        <NavbarBrand>
-          <Link className="no-underline font-bold text-lg !text-baoboox" href={`/`}>
-            BaoBoox
-          </Link>
-        </NavbarBrand>
+        {/* Используйте NavbarBrand как Link напрямую */}
+        <Link className="no-underline font-bold text-lg !text-baoboox navbar-brand" href={`/`}>
+          BaoBoox
+        </Link>
         
         <NavbarToggler onClick={toggle} className="border-0" />
         
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto flex-grow-1 justify-content-end" navbar>
             <NavItem>
-              <Link className="no-underline" href={`/explore`} passHref>
-                <NavLink>{t('Explore')}</NavLink>
+              <Link className="no-underline nav-link" href={`/explore`}>
+                {t('Explore')}
               </Link>
             </NavItem>
             <NavItem className="flex-1">
@@ -47,16 +46,16 @@ const NavBar = () => {
             </NavItem>
             <NavItem>
               {user ? (
-                <Link className="no-underline" href={`/studio`} passHref>
-                  <NavLink>{t('MyStudio')}</NavLink>
+                <Link className="no-underline nav-link" href={`/studio`}>
+                  {t('MyStudio')}
                 </Link>
               ) : (
                 <NavLink>Write Now</NavLink>
               )}
             </NavItem>
             <NavItem>
-              <Link className="no-underline" href={`/continue`} passHref>
-                <NavLink>{t('Continue')}</NavLink>
+              <Link className="no-underline nav-link" href={`/continue`}>
+                {t('Continue')}
               </Link>
             </NavItem>
             <NavItem>

@@ -15,7 +15,6 @@ export interface Page {
     bookId: string;
     visibility: boolean;
     order: number;
-    children: Page[];
     content: string;
 }
 

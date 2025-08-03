@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import {useParams} from 'next/navigation';
 import {ChangeEvent, ReactNode, useTransition} from 'react';
-import {useRouter, usePathname} from '@/i18n/routing';
+import { useRouter, usePathname } from '@/i18n/navigation';
 
 type Props = {
   children: ReactNode;
@@ -25,10 +25,9 @@ export default function LocaleSwitcherSelect({
     const nextLocale = event.target.value;
     startTransition(() => {
       router.replace(
-        // @ts-expect-error -- TypeScript will validate that only known `params`
         // are used in combination with a given `pathname`. Since the two will
         // always match for the current route, we can skip runtime checks.
-        {pathname, params},
+        {pathname},
         {locale: nextLocale}
       );
     });

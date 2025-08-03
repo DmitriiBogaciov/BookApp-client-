@@ -1,4 +1,4 @@
-"use client"; // Если планируем использовать это прямо в клиентской части
+"use client";
 
 import { ApolloClient, InMemoryCache, ApolloLink, split } from "@apollo/client";
 import { createClient } from "graphql-ws";

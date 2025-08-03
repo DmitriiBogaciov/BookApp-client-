@@ -11,18 +11,16 @@ export default async function StudioLayout({
     children: React.ReactNode
 }) {
     try {
-    const session = await auth0.getSession();
-    const books = session ? await bookService.booksForCreators() : null;
-    return (
-        <SessionGuard>
-            {session && (
+        const session = await auth0.getSession();
+        const books = session ? await bookService.booksForCreators(['_id', 'title']) : null;
+        return (
+            <SessionGuard>
                 <div className='flex h-screen'>
                     <Sidebar Books={books} />
                     {children}
                 </div>
-            )}
-        </SessionGuard>
-    )
+            </SessionGuard>
+        )
     } catch (error) {
         return (
             <div>

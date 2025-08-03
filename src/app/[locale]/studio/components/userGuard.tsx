@@ -1,29 +1,23 @@
 'use client';
+
 import { useUser } from '@auth0/nextjs-auth0';
 import { useRouter, usePathname } from 'next/navigation';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-const SessionGuard = ({ children }: { children: React.ReactNode }) => {
+export default function UserGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useUser();
-  const pathname = usePathname();
   const router = useRouter();
-  // console.log("Pathname Guard: ", pathname)
+  const pathname = usePathname();
 
-  // useEffect(() => {
-  //   if (!isLoading && !user) {
-  //     redirect(`/api/auth/login?returnTo=/${pathname}`);
-  //   }
-  // }, [isLoading, user, pathname]);
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.replace(`/auth/login?returnTo=${encodeURIComponent(pathname)}`);
+    }
+  }, [isLoading, user, pathname, router]);
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return <div>Loading...</div>;
   }
 
-  if (!user) {
-    router.push(`/auth/login?returnTo=${pathname}`);
-  }
-
   return <>{children}</>;
-};
-
-export default SessionGuard;
+}

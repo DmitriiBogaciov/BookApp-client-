@@ -19,10 +19,14 @@ export async function createPage(bookId: string, parentId: string | null) {
 }
 
 export async function getOnePage(id: string) {
-    return await pageService.getOnePage(id)
+    return await pageService.getOnePage(id, [])
 }
 
 export async function getPagesForPages(bookId: string, pageIds: string[]) {
     const pages = await pageService.getBookPages(bookId, pageIds);
     return pages;
+}
+
+export async function getBookPages(bookId: string) {
+    return await pageService.getBookPages(bookId);
 }

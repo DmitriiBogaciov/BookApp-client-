@@ -19,9 +19,11 @@ const StudioBookTitle = ({ id }: StudioBookTitleProps) => {
     useEffect(() => {
         const fetchBook = async () => {
             try {
-                const result = await getBookAction(id)
-                // console.log(result)
-                setBook(result);
+                const result = await getBookAction(id, ['_id', 'title']);
+                if (!result || !result._id) {
+                    // console.log(result)
+                    setBook(result);
+                }
             } catch (error) {
                 console.error("Failed to fetch the book:", error);
             }
