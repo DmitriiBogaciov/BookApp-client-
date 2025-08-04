@@ -5,15 +5,13 @@ import type { NextRequest } from 'next/server';
 
 const intlMiddleware = createMiddleware(routing);
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Только для /auth/ — auth0
   if (pathname.startsWith('/auth/')) {
     return auth0.middleware(request);
   }
 
-  // Для остальных — intl
   return intlMiddleware(request);
 }
 
