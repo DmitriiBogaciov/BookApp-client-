@@ -46,21 +46,24 @@ export default function PageItem({
                     onMouseLeave={() => setHovered(false)}
                 >
                     <div className="flex items-center flex-1 min-w-0">
-                        {/* Кнопка раскрытия только при наведении, иначе иконка страницы */}
-                        {hovered ? (
-                            <button
-                                className="mr-1 p-1 text-gray-500 hover:text-gray-800 transition"
-                                onClick={() => togglePageExpansion?.(page._id)}
-                                tabIndex={-1}
-                            >
-                                {expandedPage ? <FaChevronDown size={14} /> : <FaChevronRight size={14} />}
-                            </button>
-                        ) : (
-                            <span className="mr-2 text-gray-400">📄</span>
-                        )}
+                        {/* Фиксированная ширина для иконки/кнопки */}
+                        <span className="inline-flex justify-center items-center mr-2" style={{ width: 22 }}>
+                            {hovered ? (
+                                <button
+                                    className="p-1 text-gray-500 hover:text-gray-800 transition"
+                                    onClick={() => togglePageExpansion?.(page._id)}
+                                    tabIndex={-1}
+                                    style={{ width: 20, height: 20 }}
+                                >
+                                    {expandedPage ? <FaChevronDown size={14} /> : <FaChevronRight size={14} />}
+                                </button>
+                            ) : (
+                                <span className="text-gray-400" style={{ fontSize: 16 }}>📄</span>
+                            )}
+                        </span>
                         <Link
                             href={`/studio/book/${bookId}/page/${page._id}`}
-                            className="truncate text-sm text-gray-700 hover:text-gray-900 font-normal no-underline flex-1"
+                            className="truncate text-sm !text-gray-700 hover:!text-gray-900 font-normal !no-underline flex-1"
                         >
                             {page.title || 'Untitled Page'}
                         </Link>

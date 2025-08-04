@@ -50,7 +50,6 @@ const BookItem = ({
 
   return (
     <>
-      <li className="mb-2">
         {/* Заголовок книги */}
         <div className="border border-gray-300 rounded hover:bg-gray-200 cursor-pointer">
           <div className='flex justify-between items-center p-2'>
@@ -58,9 +57,7 @@ const BookItem = ({
               <button
                 onClick={() => toggleBookExpansion(book._id)}
                 className="mr-2 p-1"
-              // disabled={isLoadingPages}
               >
-                {/* <div className="animate-spin h-3 w-3 border border-gray-400 rounded-full border-t-transparent"></div> */}
                 {expandedBook ? (
                   <FaChevronDown size={12} />
                 ) : (
@@ -69,7 +66,7 @@ const BookItem = ({
               </button>
               <Link
                 href={`/studio/book/${book._id}`}
-                className="text-gray-700 hover:text-gray-900 font-normal no-underline flex-1"
+                className="!text-gray-700 hover:!text-gray-900 font-normal !no-underline flex-1"
               >
                 {book.title}
               </Link>
@@ -105,14 +102,12 @@ const BookItem = ({
                   }}
                   className="text-slate-600 hover:text-slate-800"
                 >
-                  New page
+                  + Add new page
                 </button>
               </div>
             </div>
           </div>
         )}
-
-      </li >
       {activeMenu && (
         <ContextMenu
           visible={!!activeMenu}

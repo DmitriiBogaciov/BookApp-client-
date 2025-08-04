@@ -26,12 +26,12 @@ export default function PagesList({
     const currentPages = pages?.filter(page => (page.parentId ?? null) === parentId)
     return (
         <>
-            <ul className='pl-0 list-none'>
+            <div className=''>
                 {currentPages?.length === 0 && (
                     <span className="text-gray-400 pl-3 italic text-sm">No pages inside</span>
                 )}
                 {currentPages?.map((page) => (
-                    <li key={page._id} className="pl-0">
+                    <div key={page._id} className="">
                         <PageItem
                             page={page}
                             bookId={bookId}
@@ -53,9 +53,9 @@ export default function PagesList({
                                 />
                             </div>
                         )}
-                    </li>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </>
     );
 };

@@ -18,7 +18,7 @@ export default function BookList({
     handleRemoveBook
 }: BookListProps) {
     return (
-        <ul className='pl-0 ml-0 list-none'>
+        <div className="">
             {books.map((book) => (
                 <BookItem key={book._id}
                     book={book}
@@ -27,6 +27,6 @@ export default function BookList({
                     handleRemoveBook={handleRemoveBook}
                 />
             ))}
-        </ul>
+        </div>
     );
 };

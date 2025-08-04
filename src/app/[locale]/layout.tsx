@@ -7,7 +7,7 @@ import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
 import { ApolloClientProvider } from '../providers/apollo-provider';
-import '@/app/globals.css'
+import '@/app/globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
