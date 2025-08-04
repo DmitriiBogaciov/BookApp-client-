@@ -5,11 +5,11 @@ import type { NextRequest } from 'next/server';
 
 const intlMiddleware = createMiddleware(routing);
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith('/auth/')) {
-    return auth0.middleware(request);
+    return await auth0.middleware(request);
   }
 
   return intlMiddleware(request);
@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/',
-    '/(ru|en)/:path*',
+    // '/(ru|en)/:path*',
     '/auth/:path*',
     '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
