@@ -9,16 +9,24 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith('/auth/')) {
-    return await auth0.middleware(request);
+    try {
+      const result = await auth0.middleware(request);
+      return result;
+    } catch (err) {
+      return new Response('Auth0 middleware error', { status: 500 });
+    }
   }
 
-  return intlMiddleware(request);
+  try {
+    const result = intlMiddleware(request);
+    return result;
+  } catch (err) {
+    return new Response('intlMiddleware error', { status: 500 });
+  }
 }
 
 export const config = {
   matcher: [
-    '/',
-    // '/(ru|en)/:path*',
     '/auth/:path*',
     '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
