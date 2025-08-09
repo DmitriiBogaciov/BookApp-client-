@@ -1,9 +1,8 @@
+import StudioShell from './components/studio-shell';
 import Sidebar from '@/app/[locale]/studio/components/sidebar/studio-side-bar'
-import BookService from '@/app/services/book-service'
+import { booksForCreators } from '@/app/services/book-service'
 import { auth0 } from '@/lib/auth0';
 import SessionGuard from './components/userGuard';
-
-const bookService = new BookService();
 
 export default async function StudioLayout({
     children,
@@ -12,13 +11,12 @@ export default async function StudioLayout({
 }) {
     try {
         const session = await auth0.getSession();
-        const books = session ? await bookService.booksForCreators(['_id', 'title']) : null;
+        const books = session ? await booksForCreators(['_id', 'title']) : null;
         return (
             <SessionGuard>
-                <div className='flex h-screen'>
-                    <Sidebar Books={books} />
+                <StudioShell books={books}>
                     {children}
-                </div>
+                </StudioShell>
             </SessionGuard>
         )
     } catch (error) {

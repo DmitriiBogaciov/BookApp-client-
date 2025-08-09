@@ -18,7 +18,7 @@ export default function BookList({
     handleRemoveBook
 }: BookListProps) {
     return (
-        <div className="">
+        <div className="book-list h-[calc(100vh-150px)] overflow-y-auto">
             {books.map((book) => (
                 <BookItem key={book._id}
                     book={book}

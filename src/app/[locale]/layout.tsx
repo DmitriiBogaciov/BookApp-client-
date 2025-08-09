@@ -30,20 +30,22 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html className="h-full" lang={locale}>
+    <html className="" lang={locale}>
       <head>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
         />
       </head>
-      <body className={clsx(inter.className, 'flex h-full flex-col')}>
+      <body className={clsx(inter.className, 'main-layout')}>
         <NextIntlClientProvider messages={messages}>
           <ApolloClientProvider>
-            <div className=''>
+            <div className='fixed top-0 left-0 right-0 z-50'>
               <NavBar />
             </div>
-            {children}
+            <div className="mt-14">
+              {children}
+            </div>
           </ApolloClientProvider>
         </NextIntlClientProvider>
       </body>

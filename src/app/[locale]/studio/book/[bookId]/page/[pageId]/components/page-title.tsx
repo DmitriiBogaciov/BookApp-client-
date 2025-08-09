@@ -1,14 +1,16 @@
 'use client';
 import { useState, useEffect } from "react";
-import { updatePageTitle } from "@/app/actions/pageActions";
+import { Page } from "@/app/utils/interfaces";
 
 interface PageTitleProps {
     title: string,
     pageId: string;
+    onPageTitleChange?: (pageId: string, pageData: Partial<Page>) => void;
+    onUpdateInStore?: (pageId: string, pageData: Partial<Page>) => void;
 }
 
 
-export default function PageTitle({ title, pageId }: PageTitleProps) {
+export default function PageTitle({ title, pageId, onPageTitleChange, onUpdateInStore }: PageTitleProps) {
     const [inputValue, setInputValue] = useState<string>("");
 
     useEffect(() => {
@@ -21,10 +23,14 @@ export default function PageTitle({ title, pageId }: PageTitleProps) {
 
     const handleUpdateTitle = () => {
         if (!inputValue) {
-            updatePageTitle(pageId, "Untitled");
+            if (onPageTitleChange) {
+                onPageTitleChange(pageId, { title: "Untitled" });
+            }
         } else {
             console.log("Updating title to:", inputValue);
-            updatePageTitle(pageId, inputValue);
+            if (onPageTitleChange) {
+                onPageTitleChange(pageId, { title: inputValue });
+            }
         }
     };
 
@@ -34,6 +40,9 @@ export default function PageTitle({ title, pageId }: PageTitleProps) {
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (onUpdateInStore) {
+            onUpdateInStore(pageId, { title: e.target.value });
+        }
         setInputValue(e.target.value);
     };
 

@@ -1,10 +1,9 @@
 import React from 'react';
 // import BlocksList from './components/blocks-list';
 // import BlockService from '@/app/services/block-service';
-import PageService from "@/app/services/page-service";
-import TipTapEditor from './components/tip-tap/main';
+import { getOnePage } from "@/app/services/page-service";
+import MainPage from './components/main';
 
-const pageService = new PageService();
 // const blockService = new BlockService;
 
 export default async function Page({
@@ -14,23 +13,22 @@ export default async function Page({
     params: Promise<{ pageId: string }>
 }) {
     try {
-        // const par = await params
         const { pageId } = await params;
-        const page = await pageService.getOnePage(pageId, ['content'])
-        // const blocks = await blockService.getBlocksForPage(pageId)
-        // const page = await pageService.getOnePage(pageId)
+        const page = await getOnePage(pageId, ['_id', 'title', 'content'])
 
-        return (
-            // <div>
-            //   <BlocksList blocks={blocks} pageId={pageId}/>
-            // </div>
-            <TipTapEditor content={page.content}/>
-        )
+        if (!page) {
+            return (
+                <div className="flex items-center justify-center h-[calc(100vh-56px)]">
+                    <p>Page not found</p>
+                </div>
+            );
+        }
+        return <MainPage page={page} />;
     } catch (error) {
         return (
             <div>
-              <p>Error loading Blocks</p>
+                <p>Error loading Blocks</p>
             </div>
-        )  
+        )
     }
 }

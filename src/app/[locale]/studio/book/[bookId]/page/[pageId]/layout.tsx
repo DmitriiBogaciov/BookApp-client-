@@ -4,12 +4,8 @@ import {
     Nav,
     NavItem
 } from 'reactstrap';
-import BlockService from '@/app/services/block-service';
+import { getOnePage } from "@/app/services/page-service";
 import PageTitle from './components/page-title';
-import PageService from "@/app/services/page-service";
-
-const pageService = new PageService();
-const blockService = new BlockService;
 
 export default async function StudioPageLayout({
     children,
@@ -19,21 +15,9 @@ export default async function StudioPageLayout({
     params: Promise<{ pageId: string }>
 }) {
     try {
-        const par = await params
-        const page = await pageService.getOnePage(par.pageId, ['_id', 'title', 'order', 'content'])
-
         return (
-            <div className='page-layout-0 flex justify-center w-full'>
-                <div className='page-layout-1 flex-1 max-w-4xl'>
-                    <Navbar>
-                        <Nav>
-                            <NavItem>
-                                <PageTitle title={page.title} pageId={page._id} />
-                            </NavItem>
-                        </Nav>
-                    </Navbar>
-                    {children}
-                </div>
+            <div className='page-layout-0 md:px-15 md:max-w-[1080px] border justify-center w-screen mx-auto'>
+                {children}
             </div>
         )
     } catch (error) {

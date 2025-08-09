@@ -25,8 +25,8 @@ const NavBar = () => {
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <div className="nav-container">
-      <Navbar color="light" light expand="md" className="bg-gray-500">
+    <div className="nav-container shadow-md bg-white rounded-b-xl">
+      <Navbar color="light" light expand="md" className="h-14 bg-gray-500">
         {/* Используйте NavbarBrand как Link напрямую */}
         <Link className="no-underline font-bold text-lg !text-baoboox navbar-brand" href={`/`}>
           BaoBoox

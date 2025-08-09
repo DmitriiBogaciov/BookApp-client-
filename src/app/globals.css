@@ -1,6 +1,8 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@import "../styles/_variables.scss";
+@import "../styles/_keyframe-animations.scss";
 
-@import './[locale]/components/NavBar/navbar.css';
+@import "./[locale]/components/NavBar/navbar.css";
 
 :root {
   --foreground-rgb: 0, 0, 0;

@@ -1,16 +1,36 @@
-import BookService from '@/app/services/book-service';
+import { getOneBook } from '@/app/services/book-service';
+import BookInfo from './components/book-info';
+import { Book } from '@/app/utils/interfaces';
 
-const bookService = new BookService()
+function Authors({ authors }: { authors: string[] }) {
+  if (!authors || authors.length === 0) return null;
+  return (
+    <div className="mb-6">
+      <h3 className="text-lg font-semibold text-gray-700 mb-2">Authors</h3>
+      <div className="flex flex-wrap gap-2">
+        {authors.map((author, index) => (
+          <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+            {author}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-export default async function book({
-  params
-}: {
-  params: Promise<{bookId: string}>;
-}) {
+function BookId({ id }: { id: string }) {
+  return (
+    <div className="mt-8 pt-6 border-t border-gray-200">
+      <p className="text-sm text-gray-500">Book ID: {id}</p>
+    </div>
+  );
+}
+
+export default async function book({ params }: { params: Promise<{ bookId: string }> }) {
   try {
-    const resolvedParams = await params;
-    const book = await bookService.getOneBook(resolvedParams.bookId, ['_id', 'title', 'description', 'authors']);
-    
+    const { bookId } = await params;
+    const book = await getOneBook(bookId, ['_id', 'title', 'description', 'authors']);
+
     if (!book || !book._id) {
       return (
         <div className="flex flex-col items-center justify-center min-h-screen p-8">
@@ -23,34 +43,12 @@ export default async function book({
     }
 
     return (
-      <div className="flex-1 bg-white overflow-auto">
-        <div className="max-w-4xl mx-auto p-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">{book.title}</h1>
-            
-            {book.description && (
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">Description</h3>
-                <p className="text-gray-600 leading-relaxed">{book.description}</p>
-              </div>
-            )}
-            
-            {book.authors && book.authors.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">Authors</h3>
-                <div className="flex flex-wrap gap-2">
-                  {book.authors.map((author: string, index: number) => (
-                    <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                      {author}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-500">Book ID: {book._id}</p>
-            </div>
+      <div className="flex-1 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200">
+            <BookInfo book={book} />
+            <Authors authors={book.authors} />
+            <BookId id={book._id} />
           </div>
         </div>
       </div>
@@ -64,8 +62,8 @@ export default async function book({
           <p className="text-gray-600 mb-4">
             {error instanceof Error ? error.message : 'An unexpected error occurred while loading the book.'}
           </p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
           >
             Try again

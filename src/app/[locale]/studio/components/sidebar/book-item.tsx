@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import usePages from './hooks/use-pages';
+import usePages from '../hooks/use-pages';
 import { Book, Page } from '@/app/utils/interfaces';
 import { Link } from '@/i18n/navigation';
 import { SlOptions } from "react-icons/sl";

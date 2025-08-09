@@ -1,11 +1,10 @@
 import { Book } from '@/app/utils/interfaces';
-import BookService from '@/app/services/book-service';
+import {getAllBooks} from '@/app/services/book-service';
 
-const bookService = new BookService();
 
 const ServerBookList = async () => {
   try {
-    const books = await bookService.getAllBooks();
+    const books = await getAllBooks();
 
     return (
       <div>
