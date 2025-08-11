@@ -39,21 +39,14 @@ export default function MainPage({
     }
 
     return (
-        <div className="main-page w-full">
-            <div className="navbar">
-                <div className="nav">
-                    <div className="nav-item">
-                        <PageTitle 
-                        title={currentPage.title} 
-                        pageId={currentPage._id}
-                        onPageTitleChange={handleUpdatePage}
-                        onUpdateInStore={updatePageInStore} />
-                    </div>
-                </div>
+        <div>
+            <div className="h-14 flex items-center">
+                <PageTitle title={currentPage.title} pageId={currentPage._id} onPageTitleChange={handleUpdatePage} onUpdateInStore={updatePageInStore} />
             </div>
             <div className="h-[calc(100vh-56px)]">
                 <SimpleEditor content={currentPage.content} onUpdate={handleContentChange} />
             </div>
         </div>
+
     );
 }

@@ -61,8 +61,8 @@ const StudioSideBar = ({
         </button>
       </div>
       <div
-        className={`fixed top-14 left-0 h-[calc(100vh-56px)] bg-gray-100 border-r z-50 border-gray-200 shadow-lg transition-all duration-200 ease-in-out 
-          ${isSidebarOpen ? 'min-w-56 max-w-56 p-2' : 'min-w-0'}`}
+        className={`fixed top-14 left-0 h-screen bg-gray-100 border-r z-50 border-gray-200 shadow-lg transition-all duration-200 ease-in-out 
+          ${isSidebarOpen ? 'min-w-56 max-w-56 p-2' : 'w-0'}`}
       >
         <div className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
           <div className={`flex justify-between items-center mb-4 font-bold`}>

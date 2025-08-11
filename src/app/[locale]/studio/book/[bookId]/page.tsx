@@ -47,8 +47,8 @@ export default async function book({ params }: { params: Promise<{ bookId: strin
         <div className="max-w-5xl mx-auto">
           <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200">
             <BookInfo book={book} />
-            <Authors authors={book.authors} />
-            <BookId id={book._id} />
+            {/* <Authors authors={book.authors} />
+            <BookId id={book._id} /> */}
           </div>
         </div>
       </div>

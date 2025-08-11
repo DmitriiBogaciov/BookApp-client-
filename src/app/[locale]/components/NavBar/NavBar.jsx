@@ -25,8 +25,8 @@ const NavBar = () => {
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <div className="nav-container shadow-md bg-white rounded-b-xl">
-      <Navbar color="light" light expand="md" className="h-14 bg-gray-500">
+    <div className="nav-container shadow-md rounded-b-xl">
+      <Navbar light expand="md" className="h-14 bg-gray-100 px-0 mx-0">
         {/* Используйте NavbarBrand как Link напрямую */}
         <Link className="no-underline font-bold text-lg !text-baoboox navbar-brand" href={`/`}>
           BaoBoox
@@ -35,7 +35,7 @@ const NavBar = () => {
         <NavbarToggler onClick={toggle} className="border-0" />
         
         <Collapse isOpen={isOpen} navbar>
-          <Nav className="mr-auto flex-grow-1 justify-content-end" navbar>
+          <Nav className="flex-grow-1" navbar>
             <NavItem>
               <Link className="no-underline nav-link" href={`/explore`}>
                 {t('Explore')}

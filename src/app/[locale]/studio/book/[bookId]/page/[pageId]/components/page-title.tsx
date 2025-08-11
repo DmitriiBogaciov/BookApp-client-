@@ -16,8 +16,6 @@ export default function PageTitle({ title, pageId, onPageTitleChange, onUpdateIn
     useEffect(() => {
         if (title) {
             setInputValue(title);
-        } else {
-            setInputValue("Untitled");
         }
     }, [title]);
 

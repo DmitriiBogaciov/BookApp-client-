@@ -9,8 +9,8 @@ export default async function StudioBookLayout({
 }) {
 
     return (
-        <div className="h-full">
-                {children}
-        </div>
+        <>
+            {children}
+        </>
     )
 }

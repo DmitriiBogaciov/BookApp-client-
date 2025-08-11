@@ -47,7 +47,7 @@ export default function BookInfo({ book }: BookTitleProps) {
     }
 
     return (
-        <div className="h-full m-8">
+        <div className="m-8">
             <input
                 className="!text-2xl font-bold text-gray-800 mb-4 border-b border-gray-300 focus:outline-none focus:border-purple-500 bg-transparent"
                 value={currentBook.title}

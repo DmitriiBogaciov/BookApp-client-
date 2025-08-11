@@ -40,10 +40,10 @@ export default async function LocaleLayout({
       <body className={clsx(inter.className, 'main-layout')}>
         <NextIntlClientProvider messages={messages}>
           <ApolloClientProvider>
-            <div className='fixed top-0 left-0 right-0 z-50'>
+            <div className='fixed top-0 left-0 right-0 z-60'>
               <NavBar />
             </div>
-            <div className="mt-14">
+            <div className="mt-14 h-screen overflow-y-auto">
               {children}
             </div>
           </ApolloClientProvider>
