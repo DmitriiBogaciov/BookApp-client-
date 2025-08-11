@@ -85,6 +85,34 @@ export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
     const composedRef = useComposedRef(toolbarRef, ref)
     useToolbarNavigation(toolbarRef)
 
+    // Добавьте этот useEffect для мобильных устройств
+    React.useEffect(() => {
+      // Проверяем, мобильное ли устройство
+      const isMobile = window.innerWidth <= 480;
+      const toolbar = toolbarRef.current;
+      if (!isMobile || !toolbar || !window.visualViewport) return;
+
+      const updateToolbarPosition = () => {
+        const viewport = window.visualViewport;
+        if (!viewport) return;
+        const bottomOffset = window.innerHeight - viewport.height - viewport.offsetTop;
+        toolbar.style.bottom = `${bottomOffset}px`;
+      };
+
+      window.visualViewport.addEventListener("resize", updateToolbarPosition);
+      window.visualViewport.addEventListener("scroll", updateToolbarPosition);
+
+      updateToolbarPosition();
+
+      return () => {
+        if (window.visualViewport) {
+          window.visualViewport.removeEventListener("resize", updateToolbarPosition);
+          window.visualViewport.removeEventListener("scroll", updateToolbarPosition);
+        }
+        if (toolbar) toolbar.style.bottom = "";
+      };
+    }, []);
+
     return (
       <div
         ref={composedRef}
