@@ -76,11 +76,11 @@ import "@/components/tiptap-templates/simple/simple-editor.scss"
 // import content from "@/components/tiptap-templates/simple/data/content.json"
 
 interface TipTapProps {
-    content?: string;
-    placeholder?: string;
-    onUpdate?: (content: string) => void;
-    onBlur?: (content: string) => void;
-    showMenuBar?: boolean;
+  content?: string;
+  placeholder?: string;
+  onUpdate?: (content: string) => void;
+  onBlur?: (content: string) => void;
+  showMenuBar?: boolean;
 }
 
 const MainToolbarContent = ({
@@ -242,7 +242,7 @@ export function SimpleEditor(props: TipTapProps) {
       if (props.onUpdate) {
         props.onUpdate(editor.getHTML())
       }
-    },  
+    },
     content: props.content || "",
   })
 
@@ -250,6 +250,52 @@ export function SimpleEditor(props: TipTapProps) {
     editor,
     overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
   })
+
+  React.useLayoutEffect(() => {
+    if (!isMobile || !toolbarRef.current) return;
+
+    const toolbar = toolbarRef.current;
+    const parent = toolbar.offsetParent as HTMLElement | null;
+    if (!parent) return;
+
+    const updateToolbarPosition = () => {
+      const parentRect = parent.getBoundingClientRect();
+      const toolbarHeight = toolbar.getBoundingClientRect().height;
+
+      // Если visualViewport доступен — учитываем клавиатуру
+      let bottomOffset = 0;
+      if (window.visualViewport) {
+        const viewport = window.visualViewport;
+        bottomOffset = window.innerHeight - viewport.height - viewport.offsetTop;
+      }
+
+      // Расстояние от низа родителя до низа экрана
+      const distanceToViewportBottom = window.innerHeight - parentRect.bottom;
+
+      // Итоговое смещение снизу для absolute
+      const bottomPx = Math.max(0, bottomOffset - distanceToViewportBottom);
+
+      // Гарантируем, что тулбар не вылезет за родителя
+      const maxBottom = parentRect.height - toolbarHeight;
+      toolbar.style.bottom = `${Math.min(bottomPx, maxBottom)}px`;
+    };
+
+    // Слушаем изменения
+    window.visualViewport?.addEventListener("resize", updateToolbarPosition);
+    window.visualViewport?.addEventListener("scroll", updateToolbarPosition);
+    window.addEventListener("resize", updateToolbarPosition);
+    window.addEventListener("scroll", updateToolbarPosition, { passive: true });
+
+    updateToolbarPosition();
+
+    return () => {
+      window.visualViewport?.removeEventListener("resize", updateToolbarPosition);
+      window.visualViewport?.removeEventListener("scroll", updateToolbarPosition);
+      window.removeEventListener("resize", updateToolbarPosition);
+      window.removeEventListener("scroll", updateToolbarPosition);
+      toolbar.style.bottom = "";
+    };
+  }, [isMobile]);
 
   React.useEffect(() => {
     if (!isMobile && mobileView !== "main") {
@@ -262,13 +308,13 @@ export function SimpleEditor(props: TipTapProps) {
       <EditorContext.Provider value={{ editor }}>
         <Toolbar
           ref={toolbarRef}
-          // style={{
-          //   ...(isMobile
-          //     ? {
-          //         bottom: `calc(100% - ${height - rect.y}px)`,
-          //       }
-          //     : {}),
-          // }}
+          style={{
+            ...(isMobile
+              ? {
+                bottom: `calc(100% - ${height - rect.y}px - 56px)`,
+              }
+              : {}),
+          }}
         >
           {mobileView === "main" ? (
             <MainToolbarContent
