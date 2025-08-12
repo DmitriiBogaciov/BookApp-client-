@@ -262,13 +262,13 @@ export function SimpleEditor(props: TipTapProps) {
       <EditorContext.Provider value={{ editor }}>
         <Toolbar
           ref={toolbarRef}
-          style={{
-            ...(isMobile
-              ? {
-                  bottom: `calc(100% - ${height - rect.y}px)`,
-                }
-              : {}),
-          }}
+          // style={{
+          //   ...(isMobile
+          //     ? {
+          //         bottom: `calc(100% - ${height - rect.y}px)`,
+          //       }
+          //     : {}),
+          // }}
         >
           {mobileView === "main" ? (
             <MainToolbarContent
