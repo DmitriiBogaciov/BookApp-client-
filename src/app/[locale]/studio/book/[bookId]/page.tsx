@@ -1,6 +1,5 @@
 import { getOneBook } from '@/app/services/book-service';
 import BookInfo from './components/book-info';
-import { Book } from '@/app/utils/interfaces';
 
 function Authors({ authors }: { authors: string[] }) {
   if (!authors || authors.length === 0) return null;
