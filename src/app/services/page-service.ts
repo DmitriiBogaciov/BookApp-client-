@@ -5,14 +5,11 @@ import { Page } from '@/app/utils/interfaces';
 
 const revalidate = undefined;
 
-export async function getBookPages(bookId: string, parentIds?: string[]): Promise<Page[]> {
+export async function getBookPages(bookId: string, fields: string[], parentIds?: string[]): Promise<Page[]> {
   const query = `
     query GetPages($id: String!, $parentIds: [String!]!) {
       pagesForBook(id: $id, parentIds: $parentIds) {
-        _id
-        title
-        order
-        parentId
+        ${fields}
       }
     }
   `;

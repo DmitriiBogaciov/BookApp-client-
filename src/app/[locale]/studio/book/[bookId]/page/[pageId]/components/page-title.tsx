@@ -3,14 +3,15 @@ import { useState, useEffect } from "react";
 import { Page } from "@/app/utils/interfaces";
 
 interface PageTitleProps {
+    bookId: string;
     title: string,
     pageId: string;
     onPageTitleChange?: (pageId: string, pageData: Partial<Page>) => void;
-    onUpdateInStore?: (pageId: string, pageData: Partial<Page>) => void;
+    onUpdateInStore?: (bookId: string, pageId: string, pageData: Partial<Page>) => void;
 }
 
 
-export default function PageTitle({ title, pageId, onPageTitleChange, onUpdateInStore }: PageTitleProps) {
+export default function PageTitle({bookId, title, pageId, onPageTitleChange, onUpdateInStore }: PageTitleProps) {
     const [inputValue, setInputValue] = useState<string>("");
 
     useEffect(() => {
@@ -39,7 +40,7 @@ export default function PageTitle({ title, pageId, onPageTitleChange, onUpdateIn
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (onUpdateInStore) {
-            onUpdateInStore(pageId, { title: e.target.value });
+            onUpdateInStore(bookId, pageId, { title: e.target.value });
         }
         setInputValue(e.target.value);
     };

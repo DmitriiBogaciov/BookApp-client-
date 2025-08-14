@@ -2,28 +2,49 @@ import { create } from 'zustand';
 import { Page } from '@/app/utils/interfaces';
 
 interface PagesState {
-  pages: Page[];
-  setPages: (pages: Page[]) => void;
-  updatePage: (pageId: string, data: Partial<Page>) => void;
-  addPage: (page: Page) => void;
-  removePage: (pageId: string) => void;
+  pagesByBook: Record<string, Page[]>;
+  getPages: (bookId: string) => Page[];
+  setPages: (bookId: string, pages: Page[]) => void;
+  updatePage: (bookId: string, pageId: string, data: Partial<Page>) => void;
+  addPage: (bookId: string, page: Page) => void;
+  removePage: (bookId: string, pageId: string) => void;
 }
 
-export const usePagesStore = create<PagesState>((set) => ({
-  pages: [],
-  setPages: (pages) => set({ pages }),
-  updatePage: (pageId, data) =>
+const EMPTY_PAGES: Page[] = Object.freeze([]) as unknown as Page[];
+
+export const usePagesStore = create<PagesState>((set, get) => ({
+  pagesByBook: {},
+  getPages: (bookId: string): Page[] => get().pagesByBook[bookId] ?? EMPTY_PAGES,
+  setPages: (bookId: string, pages: Page[]): void =>
     set((state) => ({
-      pages: state.pages.map((p) =>
-        p._id === pageId ? { ...p, ...data } : p
-      ),
+      pagesByBook: { ...state.pagesByBook, [bookId]: pages },
     })),
-  addPage: (page) =>
-    set((state) => ({
-      pages: [...state.pages, page],
-    })),
-  removePage: (pageId) =>
-    set((state) => ({
-      pages: state.pages.filter((p) => p._id !== pageId),
-    })),
+  updatePage: (bookId: string, pageId: string, data: Partial<Page>): void => {
+    set((state) => {
+      const list = state.pagesByBook[bookId] ?? EMPTY_PAGES;
+      return {
+        pagesByBook: {
+          ...state.pagesByBook,
+          [bookId]: list.map((p) => (p._id === pageId ? { ...p, ...data } : p)),
+        },
+      };
+    });
+  },
+  addPage: (bookId: string, page: Page): void =>
+    set((state) => {
+      const list = state.pagesByBook[bookId] ?? EMPTY_PAGES;
+      return {
+        pagesByBook: { ...state.pagesByBook, [bookId]: [...list, page] },
+      };
+    }),
+  removePage: (bookId: string, pageId: string): void =>
+    set((state) => {
+      const list = state.pagesByBook[bookId] ?? EMPTY_PAGES;
+      return {
+        pagesByBook: {
+          ...state.pagesByBook,
+          [bookId]: list.filter((p) => p._id !== pageId),
+        },
+      };
+    }),
 }));

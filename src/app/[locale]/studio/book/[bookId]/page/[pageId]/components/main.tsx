@@ -14,9 +14,7 @@ export default function MainPage({
 
     const { page: currentPage, setPage, handleUpdatePage, updatePageInStore } = usePageState(page);
     const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-
-    // Добавьте этот лог для отладки
-    console.log('currentPage:', currentPage);
+    console.log(`Current page:`, currentPage)
 
     const handleContentChange = (content: string) => {
         setPage(prev => ({ ...prev, content: content }));
@@ -41,7 +39,12 @@ export default function MainPage({
     return (
         <div>
             <div className="h-14 flex items-center">
-                <PageTitle title={currentPage.title} pageId={currentPage._id} onPageTitleChange={handleUpdatePage} onUpdateInStore={updatePageInStore} />
+                <PageTitle
+                    title={currentPage.title}
+                    pageId={currentPage._id}
+                    bookId={currentPage.bookId}
+                    onPageTitleChange={handleUpdatePage}
+                    onUpdateInStore={updatePageInStore} />
             </div>
             <div className="h-[calc(100vh-56px)]">
                 <SimpleEditor content={currentPage.content} onUpdate={handleContentChange} />

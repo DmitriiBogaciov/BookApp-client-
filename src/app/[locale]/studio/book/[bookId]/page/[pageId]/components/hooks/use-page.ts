@@ -19,10 +19,9 @@ const PAGE_UPDATED = gql`
 export default function usePageState(initialPage: Page) {
   const [page, setPage] = useState<Page>(initialPage);
 
-  // Zustand store
-  const { updatePage: updatePageInStore, pages } = usePagesStore();
+  const pages = usePagesStore(s => s.getPages(initialPage.bookId));
+  const { updatePage: updatePageInStore } = usePagesStore();
 
- 
   useEffect(() => {
     const found = pages.find((p) => p._id === initialPage._id);
     if (found) setPage(found);
@@ -31,20 +30,18 @@ export default function usePageState(initialPage: Page) {
   useSubscription(PAGE_UPDATED, {
     variables: { id: page._id },
     onSubscriptionData: ({ subscriptionData }) => {
-      console.log('Page updated subscription data:', subscriptionData.data.pageUpdated);
       const updatedPage = subscriptionData.data.pageUpdated;
       setPage((prev) => ({ ...prev, ...updatedPage }));
-      updatePageInStore(updatedPage._id, updatedPage);
+      updatePageInStore(initialPage.bookId, updatedPage._id, updatedPage);
     },
   });
 
   // Обновление страницы (и локально, и в store)
   const handleUpdatePage = async (pageId: string, pageData: Partial<Page>) => {
     try {
-      const updatedPage = await updatePage(pageId, pageData, ['_id', 'title', 'content']);
-      console.log('Page updated:', updatedPage);
+      const updatedPage = await updatePage(pageId, pageData, ['_id', 'bookId', 'title', 'content']);
       setPage((prev) => ({ ...prev, ...updatedPage }));
-      updatePageInStore(updatedPage._id, updatedPage);
+      updatePageInStore(updatedPage.bookId, updatedPage._id, updatedPage);
     } catch (error) {
       console.error('Error updating page:', error);
     }

@@ -14,7 +14,8 @@ export default async function Page({
 }) {
     try {
         const { pageId } = await params;
-        const page = await getOnePage(pageId, ['_id', 'title', 'content'])
+        const page = await getOnePage(pageId, ['_id', 'bookId', 'title', 'content'])
+        console.log('Page data:', page);
 
         if (!page) {
             return (

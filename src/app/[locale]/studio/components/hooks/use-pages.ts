@@ -35,13 +35,8 @@ export default function usePages({
     bookId,
     expandedBook
 }: UsePagesProps): UsePagesResult {
-    const {
-        pages,
-        setPages,
-        updatePage: updatePageInStore,
-        addPage: addPageInStore,
-        removePage: removePageInStore
-    } = usePagesStore();
+    const pages = usePagesStore(s => s.getPages(bookId));
+    const { setPages: setPagesInStore, addPage: addPageInStore, removePage: removePageInStore } = usePagesStore();
     const EXPANDED_PAGES_KEY = `expandedPages-${bookId}`;
     const router = useRouter();
     const [expandedPages, setExpandedPages] = useState<Set<string>>(getInitialExpandedPages(EXPANDED_PAGES_KEY));
@@ -51,8 +46,8 @@ export default function usePages({
         if (expandedBook && !loaded) {
             const fetchPages = async () => {
                 try {
-                    const result = await getBookPages(bookId);
-                    setPages(result);
+                    const result = await getBookPages(bookId, ['_id', 'bookId', 'parentId', 'order', 'title', 'content']);
+                    setPagesInStore(bookId, result);
                     setLoaded(true);
                 } catch (error) {
                     console.error('Error fetching pages:', error);
@@ -60,12 +55,11 @@ export default function usePages({
             };
             fetchPages();
         }
-    }, [bookId, expandedBook, loaded, setPages]);
+    }, [bookId, expandedBook, loaded, setPagesInStore]);
 
     useEffect(() => {
         if (expandedBook) {
             try {
-                // console.log(`Saving expanded pages for ${bookId}, expandedPages: ${JSON.stringify(Array.from(expandedPages))}`);
                 localStorage.setItem(EXPANDED_PAGES_KEY, JSON.stringify(Array.from(expandedPages)));
             } catch (error) {
                 console.error('Error saving expanded pages to localStorage:', error);
@@ -74,23 +68,18 @@ export default function usePages({
     }, [EXPANDED_PAGES_KEY, bookId, expandedBook, expandedPages]);
 
     const togglePageExpansion = (pageId: string) => {
-        // console.log(`Toggling expansion for pageId: ${pageId}`);
         setExpandedPages((prev) => {
             const newSet = new Set(prev);
-            if (newSet.has(pageId)) {
-                newSet.delete(pageId);
-            } else {
-                newSet.add(pageId);
-            }
+            if (newSet.has(pageId)) newSet.delete(pageId);
+            else newSet.add(pageId);
             return newSet;
         });
     }
 
     const handleCreatePage = async (bookId: string, parentId: string | null) => {
         try {
-            console.log(`Creating page for bookId: ${bookId}, parentId: ${parentId}`);
             const newPage = await createPage(bookId, parentId);
-            setPages([...pages, newPage]);
+            addPageInStore(bookId, newPage);
             if (parentId !== null) {
                 setExpandedPages((prev) => new Set(prev).add(parentId));
             }
@@ -102,9 +91,8 @@ export default function usePages({
 
     const handleRemovePage = async (pageId: string) => {
         try {
-            console.log(`Removing page with id: ${pageId}`);
             await removeOnePage(pageId);
-            setPages(pages.filter((page: Page) => page._id !== pageId));
+            removePageInStore(bookId, pageId);
             router.push(`/studio/book/${bookId}`);
         } catch (error) {
             console.error('Error removing book:', error);
@@ -112,13 +100,11 @@ export default function usePages({
     }
 
     return {
-        pages: pages,
+        pages,
         expandedPages,
         onCreatePage: handleCreatePage,
         togglePageExpansion,
         onRemovePage: handleRemovePage
-        // addPage,
-        // removePage,
     };
 }
 
