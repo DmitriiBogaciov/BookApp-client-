@@ -38,7 +38,7 @@ const StudioSideBar = ({
           onClick={toggleSidebar}
           className="
             hidden md:flex
-            fixed top-16 left-4 z-50
+            fixed top-16 left-2 z-50
             w-7 h-7
             items-center justify-center
             rounded-full

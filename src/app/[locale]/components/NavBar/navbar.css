@@ -1,7 +1,0 @@
-.hidden-md-up {
-    @apply hidden md:block
-}
-
-.hidden-md-down {
-    @apply block md:hidden
-}

@@ -43,7 +43,7 @@ export default async function LocaleLayout({
             <div className='fixed top-0 left-0 right-0 z-60'>
               <NavBar />
             </div>
-            <div className="mt-14 h-screen overflow-y-auto">
+            <div className="mt-14">
               {children}
             </div>
           </ApolloClientProvider>

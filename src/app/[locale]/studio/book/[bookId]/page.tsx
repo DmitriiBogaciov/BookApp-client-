@@ -42,13 +42,9 @@ export default async function book({ params }: { params: Promise<{ bookId: strin
     }
 
     return (
-      <div className="flex-1 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200">
-            <BookInfo book={book} />
-            {/* <Authors authors={book.authors} />
-            <BookId id={book._id} /> */}
-          </div>
+      <div className="bg-white">
+        <div className="max-w-5xl mx-auto md:px-10 bg-white rounded-lg shadow-sm border border-gray-200">
+          <BookInfo book={book} />
         </div>
       </div>
     );
