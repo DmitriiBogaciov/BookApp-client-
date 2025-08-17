@@ -7,6 +7,10 @@ import ContextMenu from '@/app/[locale]/components/ui/context-menu';
 import { SlOptions } from "react-icons/sl";
 import { IoMdAdd } from 'react-icons/io';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
+// + DnD
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { useDroppable } from '@dnd-kit/core';
 
 interface PageItemProps {
     page: Page,
@@ -15,6 +19,8 @@ interface PageItemProps {
     onCreatePage?: (bookId: string, parentId: string | null) => Promise<void>;
     togglePageExpansion?: (pageId: string) => void;
     onRemovePage?: (pageId: string) => Promise<void>;
+    // + глубина для aria-level и отступа
+    depth?: number;
 }
 
 export default function PageItem({
@@ -23,10 +29,26 @@ export default function PageItem({
     onCreatePage,
     bookId,
     togglePageExpansion,
-    onRemovePage
+    onRemovePage,
+    depth = 1
 }: PageItemProps) {
     const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: number } | null>(null);
     const [hovered, setHovered] = useState(false);
+
+    // Sortable для самой строки
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: page._id });
+    const style: React.CSSProperties = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.6 : 1,
+        paddingLeft: depth * 12,
+        cursor: 'grab',
+        userSelect: 'none',
+    };
+
+    // Отдельная зона сброса "сделать дочерним" для этой страницы
+    const childContainerId = `container:${page._id}`;
+    const { setNodeRef: setChildDropRef, isOver: isOverChildZone } = useDroppable({ id: childContainerId });
 
     const handleMenuClick = (e: React.MouseEvent, pageId: string) => {
         e.stopPropagation();
@@ -41,25 +63,28 @@ export default function PageItem({
         <>
             {page._id && (
                 <div
+                    ref={setNodeRef}
+                    style={style}
+                    aria-level={depth}
+                    aria-selected={false}
+                    aria-expanded={!!expandedPage}
                     className={`flex items-center justify-between m-1 px-1 py-1 rounded transition-colors duration-100 ${hovered ? 'bg-gray-200' : ''}`}
                     onMouseEnter={() => setHovered(true)}
                     onMouseLeave={() => setHovered(false)}
+                    {...attributes}
+                    {...listeners}
                 >
                     <div className="flex items-center flex-1 min-w-0">
-                        {/* Фиксированная ширина для иконки/кнопки */}
                         <span className="inline-flex justify-center items-center mr-2" style={{ width: 22 }}>
-                            {hovered ? (
-                                <button
-                                    className="p-1 text-gray-500 hover:text-gray-800 transition"
-                                    onClick={() => togglePageExpansion?.(page._id)}
-                                    tabIndex={-1}
-                                    style={{ width: 20, height: 20 }}
-                                >
-                                    {expandedPage ? <FaChevronDown size={14} /> : <FaChevronRight size={14} />}
-                                </button>
-                            ) : (
-                                <span className="text-gray-400" style={{ fontSize: 16 }}>📄</span>
-                            )}
+                            <button
+                                className="p-1 text-gray-500 hover:text-gray-800 transition"
+                                onClick={(e) => { e.stopPropagation(); togglePageExpansion?.(page._id); }}
+                                tabIndex={-1}
+                                style={{ width: 20, height: 20 }}
+                                aria-label={expandedPage ? 'Collapse' : 'Expand'}
+                            >
+                                {expandedPage ? <FaChevronDown size={14} /> : <FaChevronRight size={14} />}
+                            </button>
                         </span>
                         <Link
                             href={`/studio/book/${bookId}/page/${page._id}`}
@@ -68,19 +93,32 @@ export default function PageItem({
                             {page.title || 'Untitled Page'}
                         </Link>
                     </div>
-                    {/* Кнопки появляются только при наведении */}
+
+                    {/* Зона для "сделать дочерним" — появляется при наведении/перетаскивании */}
+                    <div
+                        ref={setChildDropRef}
+                        aria-hidden="true"
+                        className={`ml-2 px-2 py-1 rounded text-[10px] border border-dashed ${
+                            isOverChildZone ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-transparent text-gray-400'
+                        } ${hovered ? 'opacity-100' : 'opacity-0'} transition-opacity`}
+                        title="Drop here to nest"
+                    >
+                        Child
+                    </div>
+
+                    {/* Кнопки при наведении */}
                     {hovered && (
                         <div className="flex items-center gap-1">
                             <button
                                 className="p-1 hover:bg-gray-300 rounded text-gray-500 hover:text-gray-800 transition"
-                                onClick={() => onCreatePage?.(bookId, page._id)}
+                                onClick={(e) => { e.stopPropagation(); onCreatePage?.(bookId, page._id); }}
                                 title="Создать страницу"
                                 tabIndex={-1}
                             >
                                 <IoMdAdd className='text-base' />
                             </button>
                             <button
-                                onClick={(e) => handleMenuClick(e, page._id)}
+                                onClick={(e) => { e.stopPropagation(); handleMenuClick(e, page._id); }}
                                 className='p-1 hover:bg-gray-300 rounded text-gray-500 hover:text-gray-800 transition'
                                 title="Опции страницы"
                                 tabIndex={-1}

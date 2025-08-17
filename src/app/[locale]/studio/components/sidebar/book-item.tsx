@@ -27,7 +27,8 @@ const BookItem = ({
     expandedPages,
     onCreatePage,
     togglePageExpansion,
-    onRemovePage
+    onRemovePage,
+    // onReorderPages // <- добавьте это в usePages при необходимости
   } = usePages({
     bookId: book._id,
     expandedBook
@@ -91,6 +92,7 @@ const BookItem = ({
               pages={pages}
               togglePageExpansion={togglePageExpansion}
               onRemovePage={onRemovePage}
+              // onReorder={onReorderPages} // <- вызов сохранения порядка на бэкенде
             />
             <div>
               <div className="p-2 text-sm text-gray-500 italic">
