@@ -445,37 +445,34 @@ export function getProjectionForPointer(
   // Translate horizontal offset to indentation steps
   const step = indentationWidth > 0 ? Math.round(offsetX / indentationWidth) : 0;
 
-  // Determine maximal allowed depth: previous sibling depth + 1 (or 0 at top)
-  let maxDepth = 0;
-  // Scan previous visible nodes (skip activeId) to get the immediate context
-  for (let i = overIndex - 1; i >= 0; i--) {
-    const node = visible[i];
-    if (node.id === activeId) continue;
-    maxDepth = node.depth + 1;
-    break;
-  }
+  // Max depth is based on the item currently hovered (allow nesting directly under it)
+  const overDepth = visible[overIndex].depth;
+  const maxDepth = overDepth + 1;
 
   // Clamp projected depth between 0 and maxDepth
   let projectedDepth = Math.max(0, Math.min(baseDepth + step, maxDepth));
 
   // Resolve projected parentId:
-  // - depth 0 => null
-  // - depth > 0 => nearest previous node with (depth === projectedDepth - 1)
+  // - if projectedDepth === 0 => null
+  // - if projectedDepth > overDepth => parent is the over item
+  // - else => parent is the nearest previous node with depth === projectedDepth - 1
   let projectedParentId: string | null = null;
 
   if (projectedDepth === 0) {
     projectedParentId = null;
+  } else if (projectedDepth > overDepth) {
+    projectedParentId = overId;
   } else {
     const targetDepth = projectedDepth - 1;
     for (let i = overIndex - 1; i >= 0; i--) {
       const node = visible[i];
-      if (node.id === activeId) continue;
+      if (node.id === activeId) continue; // skip the active item if still present in list
       if (node.depth === targetDepth) {
         projectedParentId = node.id;
         break;
       }
     }
-    // If not found, fallback to null (safety)
+    // If not found, fallback to root
     if (projectedParentId === null) {
       projectedDepth = 0;
     }
