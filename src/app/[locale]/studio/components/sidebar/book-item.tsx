@@ -8,6 +8,8 @@ import { SlOptions } from "react-icons/sl";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import ContextMenu from '@/app/[locale]/components/ui/context-menu';
 import PagesList from './pages-list';
+import PagesTreeDnd from './pages-tree-dnd';
+import { useOptimisticPages } from './use-optimistic-pages';
 
 interface BookItemProps {
   book: Book;
@@ -27,12 +29,19 @@ const BookItem = ({
     expandedPages,
     onCreatePage,
     togglePageExpansion,
+<<<<<<< HEAD
     onRemovePage,
     // onReorderPages // <- добавьте это в usePages при необходимости
   } = usePages({
     bookId: book._id,
     expandedBook
   });
+=======
+    onRemovePage
+  } = usePages({ bookId: book._id, expandedBook });
+
+  const { pages: displayPages, applyOptimistic, clearOptimistic } = useOptimisticPages(pages);
+>>>>>>> work-from-prev
   const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: number } | null>(null);
 
   if (!book._id || !book.title) {
@@ -83,7 +92,7 @@ const BookItem = ({
             </div>
           </div>
         </div >
-        {expandedBook && (
+        {/* {expandedBook && (
           <div className=''>
             <PagesList
               bookId={book._id}
@@ -109,7 +118,7 @@ const BookItem = ({
               </div>
             </div>
           </div>
-        )}
+        )} */}
       {activeMenu && (
         <ContextMenu
           visible={!!activeMenu}
@@ -131,6 +140,22 @@ const BookItem = ({
             </button>
           </div>
         </ContextMenu>
+      )}
+
+      {/* Render tree only when book is expanded */}
+      {expandedBook && pages && pages.length > 0 && (
+        <div className="mt-1">
+          <PagesTreeDnd
+            bookId={book._id}
+            pages={displayPages}
+            expandedPages={expandedPages ?? null}
+            indentationWidth={20}
+            onCreatePage={onCreatePage}
+            togglePageExpansion={togglePageExpansion}
+            onRemovePage={onRemovePage}
+            onApply={applyOptimistic}
+          />
+        </div>
       )}
     </>
   );
