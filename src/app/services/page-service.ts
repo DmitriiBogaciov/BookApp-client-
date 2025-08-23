@@ -117,3 +117,32 @@ export async function removeOnePage(pageId: string) {
     throw error;
   }
 }
+
+export async function updatePagesBatch(
+  updates: Array<{ id: string; [key: string]: any }>,
+  fields: string[] = ['_id']
+): Promise<Page[]> {
+  if (!Array.isArray(updates) || updates.length === 0) return [];
+
+  const selection = fields.join('\n');
+  const mutation = `
+    mutation UpdatePages($updatePageInputs: [UpdatePageInput!]!) {
+      updatePages(updatePageInputs: $updatePageInputs) {
+        ${selection}
+      }
+    }
+  `;
+  const variables = { updatePageInputs: updates };
+
+  try {
+    // useToken: true — keep auth consistent with other calls
+    const data = await fetchGraphQL(mutation, variables, { revalidate, useToken: true });
+    if (!data || !data.updatePages) {
+      throw new Error('Failed to update pages batch');
+    }
+    return data.updatePages as Page[];
+  } catch (error) {
+    console.error('Error in updatePagesBatch:', error);
+    throw error;
+  }
+}
