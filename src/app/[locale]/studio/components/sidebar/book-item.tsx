@@ -25,24 +25,18 @@ const BookItem = ({
   handleRemoveBook
 }: BookItemProps) => {
   const {
-    pages,
-    expandedPages,
-    onCreatePage,
-    togglePageExpansion,
-<<<<<<< HEAD
-    onRemovePage,
-    // onReorderPages // <- добавьте это в usePages при необходимости
-  } = usePages({
-    bookId: book._id,
-    expandedBook
-  });
-=======
-    onRemovePage
-  } = usePages({ bookId: book._id, expandedBook });
+  pages,
+  expandedPages,
+  onCreatePage,
+  togglePageExpansion,
+  onRemovePage
+} = usePages({
+  bookId: book._id,
+  expandedBook
+});
 
-  const { pages: displayPages, applyOptimistic, clearOptimistic } = useOptimisticPages(pages);
->>>>>>> work-from-prev
-  const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: number } | null>(null);
+const { pages: displayPages, applyOptimistic, clearOptimistic } = useOptimisticPages(pages);
+const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: number } | null>(null);
 
   if (!book._id || !book.title) {
     console.warn(`Invalid book data: ${JSON.stringify(book)}`);
