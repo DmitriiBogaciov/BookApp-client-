@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import PageItem from './page-item';
+import SortablePageItem from './page-item';
 import { Page } from '@/app/utils/interfaces';
 
 interface PagesListProps {
@@ -32,7 +32,7 @@ export default function PagesList({
                 )}
                 {currentPages?.map((page) => (
                     <div key={page._id} className="">
-                        <PageItem
+                        <SortablePageItem
                             page={page}
                             bookId={bookId}
                             expandedPage={expandedPages?.has(page._id)}
