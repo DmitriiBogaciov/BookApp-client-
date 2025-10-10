@@ -1,164 +1,322 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import PageItem from './page-item';
-import { Page } from '@/app/utils/interfaces';
-
-// + DnD
+import React, { useMemo, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
-  DndContext,
-  DragEndEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useDroppable,
-  useSensor,
-  useSensors,
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragStartEvent,
+    DragOverlay,
+    DragMoveEvent,
+    DragEndEvent,
+    DragOverEvent,
+    MeasuringStrategy,
+    DropAnimation,
+    defaultDropAnimation,
 } from '@dnd-kit/core';
 import {
-  SortableContext,
-  verticalListSortingStrategy,
+    SortableContext,
+    verticalListSortingStrategy,
+    arrayMove
 } from '@dnd-kit/sortable';
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { getChildren, findById, movePage, normalizeOrders } from '@/shared/dnd/page-tree';
+import SortablePageItem from './page-item';
+import { flattenTree, getProjection } from './tree-utils';
+import { Page } from '@/app/utils/interfaces';
+import { updatePage } from '@/app/services/page-service';
+import { usePagesStore } from '@/app/store/pages-store';
 
-interface PagesListProps {
-  bookId: string;
-  onCreatePage?: (bookId: string, parentId: string | null) => Promise<void>;
-  pages?: Page[],
-  expandedPages?: Set<string> | null;
-  parentId?: string | null;
-  togglePageExpansion?: (pageId: string) => void;
-  onRemovePage?: (pageId: string) => Promise<void>;
-  // + новый коллбек для персиста
-  onReorder?: (nextPages: Page[]) => Promise<void> | void;
+// Types for our tree structure
+interface FlattenedPage extends Page {
+    depth: number;
+    parentId: string | null;
+    index: number;
 }
 
-export default function PagesList({
-  bookId,
-  onCreatePage,
-  pages = [],
-  expandedPages,
-  parentId = null,
-  togglePageExpansion,
-  onRemovePage,
-  onReorder,
-}: PagesListProps) {
+interface ProjectedPosition {
+    depth: number;
+    parentId: string | null;
+}
 
-  // Локальная копия для мгновенного UI-обновления
-  const [localPages, setLocalPages] = useState<Page[]>(() => normalizeOrders(pages));
-  // Синхронизируемся только если ссылка на массив реально изменилась
-  useEffect(() => { setLocalPages(normalizeOrders(pages)); }, [pages]);
+interface SortablePageTreeProps {
+    bookId: string;
+    onCreatePage?: (bookId: string, parentId: string | null) => Promise<void>;
+    pages?: Page[],
+    expandedPages?: Set<string> | null;
+    togglePageExpansion?: (pageId: string) => void;
+    onRemovePage?: (pageId: string) => Promise<void>;
+    indentationWidth?: number;
+}
 
-  const isRoot = parentId === null;
+// Configuration for drag-and-drop measuring
+const measuring = {
+    droppable: {
+        strategy: MeasuringStrategy.Always,
+    },
+};
 
-  // Сенсоры (мышь + клавиатура)
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(KeyboardSensor)
-  );
+// Animation configuration for drop 
+const dropAnimation: DropAnimation = {
+    ...defaultDropAnimation
+};
 
-  // Текущие страницы этого уровня
-  const currentPages = useMemo(() => getChildren(localPages, parentId), [localPages, parentId]);
+/**
+ * SortablePageTree component provides drag-and-drop functionality for organizing pages in a tree structure
+ * 
+ * @param pages - Array of pages to display in the tree
+ * @param bookId - ID of the book these pages belong to
+ * @param expandedPages - Set of page IDs that are currently expanded
+ * @param onPagesReorder - Callback to handle reordering of pages
+ * @param onCreatePage - Callback to create a new page
+ * @param onToggleExpansion - Callback to toggle page expansion
+ * @param onRemovePage - Callback to remove a page
+ * @param indentationWidth - Width in pixels for each level of indentation
+ */
 
-  // Контейнер-дроп для данного родителя (перенос в конец этого контейнера)
-  const containerId = `container:${parentId ?? 'root'}`;
-  const { setNodeRef: setContainerRef } = useDroppable({ id: containerId });
+export default function SortablePageTree({
+    bookId,
+    onCreatePage,
+    pages,
+    expandedPages,
+    togglePageExpansion,
+    onRemovePage,
+    indentationWidth = 12,
+}: SortablePageTreeProps) {
+    // State for drag-and-drop operations
+    const [activeId, setActiveId] = useState<string | null>(null);
+    const [overId, setOverId] = useState<string | null>(null);
+    const [offsetLeft, setOffsetLeft] = useState(0);
+    const { updatePage: updatePageInStore } = usePagesStore();
 
-  const handleDragEnd = async (e: DragEndEvent) => {
-    const { active, over } = e;
-    if (!over) return;
 
-    const activeId = String(active.id);
-    const overId = String(over.id);
 
-    // Перенос в контейнер (сделать дочерним или в корень)
-    if (overId.startsWith('container:')) {
-      const newParentId = overId.replace('container:', '') === 'root' ? null : overId.replace('container:', '');
-      const newIndex = getChildren(localPages, newParentId).length; // в конец
-      const next = movePage(localPages, activeId, newParentId, newIndex);
-      setLocalPages(next);
-      await onReorder?.(next);
-      return;
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: { distance: 8 }
+        })
+    )
+
+    /**
+         * Recursively gets all descendant page IDs for a given page
+         * This is critical for drag-and-drop operations to ensure entire subtrees move together
+         * 
+         * @param pageId - ID of the parent page
+         * @param allPages - Complete array of all pages in the book
+         * @returns Array of all descendant page IDs (children, grandchildren, etc.)
+         * 
+         * @example
+         * Input pages:
+         * [
+         *   { _id: '1', parentId: null },
+         *   { _id: '2', parentId: '1' },
+         *   { _id: '3', parentId: '2' },
+         *   { _id: '4', parentId: '1' },
+         * ]
+         * 
+         * getDescendantIds('1', pages) returns: ['2', '3', '4']
+     */
+
+    const getDescendantIds = (pageId: string, allPages: Page[]): string[] => {
+        const descendants: string[] = [];
+
+        const collectChildren = (parentId: string) => {
+            const children = allPages.filter(page => page.parentId === parentId);
+            children.forEach(child => {
+                descendants.push(child._id);
+                if (parentId === child._id) return; // Prevent self-referencing loops
+                collectChildren(child._id)
+            });
+        };
+
+        collectChildren(pageId);
+        return descendants;
     }
 
-    // Иначе — переупорядочивание относительно другой страницы (в пределах её родителя)
-    const overPage = findById(localPages, overId);
-    const activePage = findById(localPages, activeId);
-    if (!overPage || !activePage) return;
+    /**
+   * Flattens the tree structure into a linear array with depth information
+   * This is needed for efficient rendering and drag-and-drop calculations
+   * Pages are sorted by their 'order' field at each level
+   */
+    const flattenedPages = useMemo(() => {
+        const flattenedPages = flattenTree(pages || [], expandedPages, activeId, overId);
+        // console.log(`Flattened pages:`, flattenedPages);
+        return flattenedPages;
+    }, [pages, expandedPages, activeId, overId]);
 
-    const targetParentId = overPage.parentId ?? null;
+    /**
+   * Calculates the projected position when dragging over another item
+   * This determines where the item would be placed if dropped
+   */
 
-    const targetSiblings = getChildren(localPages, targetParentId);
-    const overIndex = targetSiblings.findIndex(p => p._id === overPage._id);
+    const projected =
+        activeId && overId
+            ? getProjection(
+                flattenedPages,
+                activeId,
+                overId,
+                offsetLeft,
+                indentationWidth)
+            : null;
 
-    // Вставляем ПЕРЕД элементом, на который бросили
-    const insertIndex = Math.max(0, overIndex);
+    // Get IDs for SortableContext
+    const sortedIds = useMemo(() =>
+        flattenedPages.map(page => page._id),
+        [flattenedPages]
+    );
 
-    const next = movePage(localPages, activeId, targetParentId, insertIndex);
-    setLocalPages(next);
-    await onReorder?.(next);
-  };
+    // Find active item for drag overlay
+    const activeItem = activeId
+        ? flattenedPages.find(page => page._id === activeId)
+        : null;
 
-  const content = (
-    <div ref={setContainerRef} role={isRoot ? 'tree' : 'group'} aria-label={isRoot ? 'Pages' : undefined}>
-      <SortableContext items={currentPages.map(p => p._id)} strategy={verticalListSortingStrategy}>
-        {currentPages.length === 0 && isRoot && (
-          <span className="text-gray-400 pl-3 italic text-sm">No pages inside</span>
-        )}
-        {currentPages.map((page) => (
-          <div key={page._id}>
-            <PageItem
-              page={page}
-              bookId={bookId}
-              expandedPage={expandedPages?.has(page._id)}
-              onCreatePage={onCreatePage}
-              togglePageExpansion={togglePageExpansion}
-              onRemovePage={onRemovePage}
-              depth={computeDepth(localPages, page._id)}
-            />
-            {expandedPages?.has(page._id) && (
-              <div className='ml-3'>
-                <PagesList
-                  bookId={bookId}
-                  onCreatePage={onCreatePage}
-                  pages={localPages}
-                  expandedPages={expandedPages}
-                  parentId={page._id}
-                  togglePageExpansion={togglePageExpansion}
-                  onRemovePage={onRemovePage}
-                  onReorder={onReorder}
-                />
-              </div>
+    /**
+   * Handles the start of a drag operation
+   */
+    const handleDragStart = ({ active }: DragStartEvent) => {
+        setActiveId(active.id as string);
+        setOverId(active.id as string);
+        document.body.style.setProperty('cursor', 'grabbing');
+    };
+
+    /**
+  * Handles mouse movement during drag
+  * Updates the horizontal offset for depth calculation
+  */
+    const handleDragMove = ({ delta }: DragMoveEvent) => {
+        setOffsetLeft(delta.x);
+    };
+
+    /**
+   * Handles drag over events
+   * Updates which item is being dragged over
+   */
+    const handleDragOver = ({ over }: DragOverEvent) => {
+        setOverId(over?.id as string ?? null);
+    };
+
+    /**
+   * Handles the end of a drag operation
+   * Calculates new positions and updates the page structure
+   */
+    const handleDragEnd = async ({ active, over }: DragEndEvent) => {
+        if (!over || !projected) {
+            resetDragState();
+            return;
+        }
+
+        const activeItem = projected.activeItem;
+        const newParentId = projected.parentId;
+        //Sibling pages under the new parent
+        const prevSibling = flattenedPages
+        .slice(0, projected.overIndex)
+        .reverse()
+        .find(page => page.depth === projected.depth && page.parentId === newParentId);
+        const nextSibling = projected.nextItem?.depth === projected.depth && projected.nextItem?.parentId === newParentId
+            ? projected.nextItem : null;
+
+        let newOrder = 0;
+        if (nextSibling && prevSibling) {
+            newOrder = (nextSibling.order + prevSibling.order) / 2;
+            console.log(`New order calculated from both siblings: ${newOrder}`);
+        } else if (nextSibling) {
+            newOrder = nextSibling.order / 2;
+            console.log(`New order calculated from nextSibling: ${newOrder}`);
+        } else if (prevSibling) {
+            newOrder = prevSibling.order + 100;
+            console.log(`New order calculated from prevSibling: ${newOrder}`);
+        } else {
+            newOrder = 100;
+            console.log(`New order set as first child: ${newOrder}`);
+        }
+
+        //Optimistically update UI
+        updatePageInStore(bookId, activeItem._id, {
+            parentId: newParentId,
+            order: newOrder
+        })
+
+        try {
+            const updatedPage = await updatePage(activeItem._id, {
+                parentId: newParentId,
+                order: newOrder,
+            }, ['_id, parentId, order']);
+            console.log(`Page moved: `, updatedPage);
+        } catch (e) {
+            updatePageInStore(bookId, activeItem._id, {
+                parentId: activeItem.parentId,
+                order: activeItem.order,
+            });
+            console.error("Failed to move page:", e);
+        }
+        resetDragState();
+    };
+
+    /**
+   * Handles drag cancellation
+   */
+    const handleDragCancel = () => {
+        resetDragState();
+    };
+
+    /**
+  * Resets all drag-related state
+  */
+    const resetDragState = () => {
+        setActiveId(null);
+        setOverId(null);
+        setOffsetLeft(0);
+        document.body.style.setProperty('cursor', '');
+
+        console.log(`ResetedDragState activeId:${activeId}`)
+    };
+
+    return (
+        <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            measuring={measuring}
+            onDragStart={handleDragStart}
+            onDragMove={handleDragMove}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+            onDragCancel={handleDragCancel}
+        >
+            <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
+                <div className="m-0 p-0">
+                    {flattenedPages.map((page) => (
+                        <div key={page._id} className="group">
+                            <SortablePageItem
+                                page={page}
+                                bookId={bookId}
+                                depth={page._id === activeId && projected ? projected.depth : page.depth}
+                                expandedPage={expandedPages?.has(page._id)}
+                                indentationWidth={indentationWidth}
+                                onCreatePage={onCreatePage}
+                                togglePageExpansion={togglePageExpansion}
+                                onRemovePage={onRemovePage}
+                            />
+                        </div>
+                    ))}
+                </div>
+            </SortableContext>
+
+            {/* Drag overlay portal */}
+            {createPortal(
+                <DragOverlay dropAnimation={dropAnimation}>
+                    {activeId && activeItem ? (
+                        <SortablePageItem
+                            page={activeItem}
+                            bookId={bookId}
+                            depth={activeItem.depth}
+                            isDragOverlay={true}
+                            indentationWidth={indentationWidth}
+                        />
+                    ) : null}
+                </DragOverlay>,
+                document.body
             )}
-          </div>
-        ))}
-      </SortableContext>
-    </div>
-  );
-
-  if (!isRoot) return content;
-
-  return (
-    <DndContext
-      sensors={sensors}
-      modifiers={[restrictToVerticalAxis]}
-      onDragEnd={handleDragEnd}
-    >
-      {content}
-    </DndContext>
-  );
-}
-
-// Вычисление глубины для aria-level
-function computeDepth(pages: Page[], id: string): number {
-  let depth = 1;
-  let cur = pages.find(p => p._id === id);
-  const guard = new Set<string>();
-  while (cur && cur.parentId) {
-    if (guard.has(cur._id)) break;
-    guard.add(cur._id);
-    depth += 1;
-    cur = pages.find(p => p._id === cur!.parentId);
-  }
-  return depth;
-}
+        </DndContext>
+    );
+};

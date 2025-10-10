@@ -14,7 +14,7 @@ export default function MainPage({
 
     const { page: currentPage, setPage, handleUpdatePage, updatePageInStore } = usePageState(page);
     const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-    console.log(`Current page:`, currentPage)
+    // console.log(`Current page:`, currentPage)
 
     const handleContentChange = (content: string) => {
         setPage(prev => ({ ...prev, content: content }));
