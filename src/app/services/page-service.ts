@@ -44,13 +44,11 @@ export async function getOnePage(pageId: string, fields: string[]): Promise<Page
   }
 }
 
-export async function createPage(bookId: string, parentId: string | null): Promise<Page> {
+export async function createPage(bookId: string, parentId: string | null, fields: string[]): Promise<Page> {
   const mutation = `
     mutation CreatePage($input: CreatePageInput!) {
       createPage(createPageInput: $input) {
-        _id
-        title
-        parentId
+        ${fields}
       }
     }
   `;

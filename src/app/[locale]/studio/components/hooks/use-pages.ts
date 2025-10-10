@@ -43,6 +43,7 @@ export default function usePages({
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
+        //TODO: lazy load pages only when book and pages are expanded in the tree view
         if (expandedBook && !loaded) {
             const fetchPages = async () => {
                 try {
@@ -78,7 +79,7 @@ export default function usePages({
 
     const handleCreatePage = async (bookId: string, parentId: string | null) => {
         try {
-            const newPage = await createPage(bookId, parentId);
+            const newPage = await createPage(bookId, parentId, ['_id', 'bookId', 'parentId', 'order', 'title', 'content']);
             addPageInStore(bookId, newPage);
             if (parentId !== null) {
                 setExpandedPages((prev) => new Set(prev).add(parentId));

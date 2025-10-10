@@ -7,7 +7,7 @@ import { Link } from '@/i18n/navigation';
 import { SlOptions } from "react-icons/sl";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import ContextMenu from '@/app/[locale]/components/ui/context-menu';
-import PagesList from './pages-list';
+import SortablePageTree from './pages-list';
 
 interface BookItemProps {
   book: Book;
@@ -84,7 +84,7 @@ const BookItem = ({
         </div >
         {expandedBook && (
           <div className=''>
-            <PagesList
+            <SortablePageTree
               bookId={book._id}
               expandedPages={expandedPages}
               onCreatePage={onCreatePage}
