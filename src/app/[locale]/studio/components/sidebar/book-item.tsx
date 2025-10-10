@@ -33,7 +33,6 @@ const BookItem = ({
   expandedBook
 });
 
-const { pages: displayPages, applyOptimistic, clearOptimistic } = useOptimisticPages(pages);
 const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: number } | null>(null);
 
   if (!book._id || !book.title) {
@@ -84,33 +83,6 @@ const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: num
             </div>
           </div>
         </div >
-        {/* {expandedBook && (
-          <div className=''>
-            <SortablePageTree
-              bookId={book._id}
-              expandedPages={expandedPages}
-              onCreatePage={onCreatePage}
-              pages={pages}
-              togglePageExpansion={togglePageExpansion}
-              onRemovePage={onRemovePage}
-              // onReorder={onReorderPages} // <- вызов сохранения порядка на бэкенде
-            />
-            <div>
-              <div className="p-2 text-sm text-gray-500 italic">
-                <button
-                  onClick={() => {
-                    if (onCreatePage) {
-                      onCreatePage(book._id, null);
-                    }
-                  }}
-                  className="text-slate-600 hover:text-slate-800"
-                >
-                  + Add new page
-                </button>
-              </div>
-            </div>
-          </div>
-        )} */}
       {activeMenu && (
         <ContextMenu
           visible={!!activeMenu}
@@ -137,15 +109,14 @@ const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: num
       {/* Render tree only when book is expanded */}
       {expandedBook && pages && pages.length > 0 && (
         <div className="mt-1">
-          <PagesTreeDnd
+          <SortablePageTree
             bookId={book._id}
-            pages={displayPages}
+            pages={pages}
             expandedPages={expandedPages ?? null}
             indentationWidth={20}
             onCreatePage={onCreatePage}
             togglePageExpansion={togglePageExpansion}
             onRemovePage={onRemovePage}
-            onApply={applyOptimistic}
           />
         </div>
       )}
