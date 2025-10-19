@@ -18,15 +18,17 @@ export default function BookList({
     handleRemoveBook
 }: BookListProps) {
     return (
-        <div className="book-list h-full overflow-y-auto">
-            {books.map((book) => (
-                <BookItem key={book._id}
-                    book={book}
-                    expandedBook={expandedBooks?.has(book._id) || false}
-                    toggleBookExpansion={toggleBookExpansion}
-                    handleRemoveBook={handleRemoveBook}
-                />
-            ))}
+        <div className="book-list flex-1 overflow-y-auto">
+            <div className="pb-28">
+                {books.map((book) => (
+                    <BookItem key={book._id}
+                        book={book}
+                        expandedBook={expandedBooks?.has(book._id) || false}
+                        toggleBookExpansion={toggleBookExpansion}
+                        handleRemoveBook={handleRemoveBook}
+                    />
+                ))}
+            </div>
         </div>
     );
 };

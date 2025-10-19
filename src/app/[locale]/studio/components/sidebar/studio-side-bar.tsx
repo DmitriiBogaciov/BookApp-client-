@@ -61,11 +61,14 @@ const StudioSideBar = ({
         </button>
       </div>
       <div
-        className={`fixed top-14 left-0 h-screen bg-gray-100 border-r z-50 border-gray-200 shadow-lg transition-all duration-200 ease-in-out 
-          ${isSidebarOpen ? 'min-w-56 max-w-56 p-2' : 'w-0'}`}
+        className={`fixed top-14 left-0 h-screen 
+          bg-gray-100 border-r z-50 border-gray-200 shadow-lg 
+          transition-all duration-200 ease-in-out 
+          ${isSidebarOpen ? 'min-w-56 max-w-56 p-2' : 'w-0'}
+        `}
       >
-        <div className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
-          <div className={`flex justify-between items-center mb-4 font-bold`}>
+        <div className={`${isSidebarOpen ? 'flex flex-col h-full' : 'hidden'}`}>
+          <div className={`flex justify-between items-center mb-4 font-bold flex-shrink-0`}>
             <span className='flex-1'>Books</span>
             <button
               className="!text-xl font-bold pr-2"

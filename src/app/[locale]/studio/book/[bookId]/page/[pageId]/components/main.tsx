@@ -1,6 +1,6 @@
 'use client'
 import { Page } from "@/app/utils/interfaces";
-import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
+import Tiptap from '@/app/components/tip-tap/tiptap-editor';
 import PageTitle from "./page-title";
 import usePageState from "./hooks/use-page";
 
@@ -37,19 +37,23 @@ export default function MainPage({
     }
 
     return (
-        <div>
-            <div className="h-14 flex items-center">
+        <section className="flex flex-col">
+            <header className="h-14 flex items-center border-b border-gray-200">
                 <PageTitle
                     title={currentPage.title}
                     pageId={currentPage._id}
                     bookId={currentPage.bookId}
                     onPageTitleChange={handleUpdatePage}
-                    onUpdateInStore={updatePageInStore} />
-            </div>
-            <div className="h-[calc(100vh-56px)]">
-                <SimpleEditor content={currentPage.content} onUpdate={handleContentChange} />
-            </div>
-        </div>
-
+                    onUpdateInStore={updatePageInStore}
+                />
+            </header>
+            
+            <main className="flex-1">
+                <Tiptap
+                    content={currentPage.content}
+                    onUpdate={handleContentChange}
+                />
+            </main>
+        </section>
     );
 }

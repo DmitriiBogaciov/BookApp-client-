@@ -3,7 +3,7 @@
 import React, { useRef } from 'react'
 import { Book } from '@/app/utils/interfaces'
 import useBookState from './hooks/use-book'
-import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor"
+import Tiptap from '@/app/components/tip-tap/tiptap-editor';
 
 interface BookTitleProps {
     book: Book
@@ -56,7 +56,7 @@ export default function BookInfo({ book }: BookTitleProps) {
             />
             <h5 className="text-lg font-semibold text-gray-700 mb-2">Description</h5>
             <div className="h-[calc(100vh-56px)]">
-                <SimpleEditor
+                <Tiptap
                     content={currentBook.description}
                     onUpdate={handleDescriptionChange}
                 />

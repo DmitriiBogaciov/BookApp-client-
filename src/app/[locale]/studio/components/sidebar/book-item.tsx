@@ -23,17 +23,16 @@ const BookItem = ({
   handleRemoveBook
 }: BookItemProps) => {
   const {
-  pages,
-  expandedPages,
-  onCreatePage,
-  togglePageExpansion,
-  onRemovePage
-} = usePages({
-  bookId: book._id,
-  expandedBook
-});
-
-const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: number } | null>(null);
+    pages,
+    expandedPages,
+    onCreatePage,
+    togglePageExpansion,
+    onRemovePage
+  } = usePages({
+    bookId: book._id,
+    expandedBook
+  });
+  const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: number } | null>(null);
 
   if (!book._id || !book.title) {
     console.warn(`Invalid book data: ${JSON.stringify(book)}`);
@@ -83,6 +82,32 @@ const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: num
             </div>
           </div>
         </div >
+        {expandedBook && (
+          <div className=''>
+            <SortablePageTree
+              bookId={book._id}
+              expandedPages={expandedPages}
+              onCreatePage={onCreatePage}
+              pages={pages}
+              togglePageExpansion={togglePageExpansion}
+              onRemovePage={onRemovePage}
+            />
+            <div>
+              <div className="p-2 text-sm text-gray-500 italic">
+                <button
+                  onClick={() => {
+                    if (onCreatePage) {
+                      onCreatePage(book._id, null);
+                    }
+                  }}
+                  className="text-slate-600 hover:text-slate-800"
+                >
+                  + Add new page
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       {activeMenu && (
         <ContextMenu
           visible={!!activeMenu}
@@ -104,21 +129,6 @@ const [activeMenu, setActiveMenu] = useState<{ pageId: string, x: number, y: num
             </button>
           </div>
         </ContextMenu>
-      )}
-
-      {/* Render tree only when book is expanded */}
-      {expandedBook && pages && pages.length > 0 && (
-        <div className="mt-1">
-          <SortablePageTree
-            bookId={book._id}
-            pages={pages}
-            expandedPages={expandedPages ?? null}
-            indentationWidth={20}
-            onCreatePage={onCreatePage}
-            togglePageExpansion={togglePageExpansion}
-            onRemovePage={onRemovePage}
-          />
-        </div>
       )}
     </>
   );

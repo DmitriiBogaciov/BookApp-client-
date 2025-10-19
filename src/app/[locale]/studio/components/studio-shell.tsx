@@ -11,11 +11,11 @@ export default function StudioShell({
   children: React.ReactNode
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  // const SIDEBAR_WIDTH = 224; // px
-   const SIDEBAR_WIDTH = 0;
+  const SIDEBAR_WIDTH = 224; // px
+  //  const SIDEBAR_WIDTH = 0;
 
   return (
-    <div className="md:flex">
+    <div className="studio-shell md:flex">
       <Sidebar
         Books={books}
         isSidebarOpen={isSidebarOpen}
