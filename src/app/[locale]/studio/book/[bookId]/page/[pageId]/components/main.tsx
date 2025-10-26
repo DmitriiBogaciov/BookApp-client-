@@ -37,8 +37,8 @@ export default function MainPage({
     }
 
     return (
-        <section className="flex flex-col">
-            <header className="h-14 flex items-center border-b border-gray-200">
+        <div className="page-main flex flex-col">
+            <div className="page-header px-[calc(3rem)] h-14 flex items-center border-b border-gray-200 mb-3">
                 <PageTitle
                     title={currentPage.title}
                     pageId={currentPage._id}
@@ -46,14 +46,14 @@ export default function MainPage({
                     onPageTitleChange={handleUpdatePage}
                     onUpdateInStore={updatePageInStore}
                 />
-            </header>
-            
-            <main className="flex-1">
+            </div>
+
+            <div className="page-content">
                 <Tiptap
                     content={currentPage.content}
                     onUpdate={handleContentChange}
                 />
-            </main>
-        </section>
+            </div>
+        </div>
     );
 }

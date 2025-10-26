@@ -11,7 +11,7 @@ function CustomLink({ href, className = '', children, ...props }) {
   return (
     <Link
       href={href}
-      className={`!no-underline !text-slate-700 hover:!text-slate-900 ${className}`}
+      className={`no-underline! text-slate-700! hover:text-slate-900! ${className}`}
       {...props}
     >
       {children}
@@ -25,9 +25,9 @@ const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="nav-container shadow-md rounded-b-xl">
-      <nav className="h-14 bg-gray-100">
-        <div className="mx-auto h-14 px-3 flex items-center justify-between gap-2">
+    <div className="nav-container bg-gray-100 flex items-center h-full shadow-md">
+      <nav className="bg-gray-100 w-full h-full flex items-center">
+        <div className="flex w-full items-center justify-between">
           <CustomLink href="/" className="no-underline font-bold text-lg text-baoboox">
             BaoBoox
           </CustomLink>

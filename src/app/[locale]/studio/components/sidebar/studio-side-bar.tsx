@@ -5,8 +5,6 @@ import { Book, Page } from '@/app/utils/interfaces';
 import { useBooksState } from '../hooks/use-books';
 import BookList from './book-list';
 import { BiChevronsLeft, BiChevronsRight } from "react-icons/bi";
-import { IoMenu } from "react-icons/io5";
-
 interface StudioSideBarProps {
   Books: Book[];
   isSidebarOpen: boolean;
@@ -32,66 +30,29 @@ const StudioSideBar = ({
   };
 
   return (
-    <>
-      {!isSidebarOpen && (
+    <div className='relative h-full bg-gray-100 border-r border-gray-200 shadow-lg'>
+      <div className={`flex sticky top-0 bg-gray-100 z-50 justify-between items-center font-bold shrink-0`}>
+        <span className='flex-1'>Books</span>
+        <button
+          className="text-xl! font-bold pr-2"
+          onClick={() => handleCreateBook()}
+        >
+          +
+        </button>
         <button
           onClick={toggleSidebar}
-          className="
-            hidden md:flex
-            fixed top-16 left-2 z-50
-            w-7 h-7
-            items-center justify-center
-            rounded-full
-          bg-gray-200 text-gray-700 shadow-lg
-          hover:bg-gray-300 hover:text-gray-900 hover:scale-105
-            transition-all duration-200
-            border-2 border-white
-          "
-          aria-label="Open sidebar"
+          className={`w-7 h-7`}
         >
-          <BiChevronsRight size={32} />
-        </button>
-      )}
-      <div className='p-2 width-full md:hidden z-50 bg-transparent'>
-        <button
-          onClick={toggleSidebar}
-          className="w-7 h-7 flex items-center justify-center"
-        >
-          <IoMenu size={32} />
+          <BiChevronsLeft size={32} />
         </button>
       </div>
-      <div
-        className={`fixed top-14 left-0 h-screen 
-          bg-gray-100 border-r z-50 border-gray-200 shadow-lg 
-          transition-all duration-200 ease-in-out 
-          ${isSidebarOpen ? 'min-w-56 max-w-56 p-2' : 'w-0'}
-        `}
-      >
-        <div className={`${isSidebarOpen ? 'flex flex-col h-full' : 'hidden'}`}>
-          <div className={`flex justify-between items-center mb-4 font-bold flex-shrink-0`}>
-            <span className='flex-1'>Books</span>
-            <button
-              className="!text-xl font-bold pr-2"
-              onClick={() => handleCreateBook()}
-            >
-              +
-            </button>
-            <button
-              onClick={toggleSidebar}
-              className={`w-7 h-7`}
-            >
-              <BiChevronsLeft size={32} />
-            </button>
-          </div>
-          <BookList
-            books={books}
-            expandedBooks={expandedBooks}
-            toggleBookExpansion={toggleBookExpansion}
-            handleRemoveBook={handleRemoveBook}
-          />
-        </div>
-      </div>
-    </>
+      <BookList
+        books={books}
+        expandedBooks={expandedBooks}
+        toggleBookExpansion={toggleBookExpansion}
+        handleRemoveBook={handleRemoveBook}
+      />
+    </div>
   );
 }
 export default StudioSideBar;

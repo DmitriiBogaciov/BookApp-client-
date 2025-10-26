@@ -24,7 +24,11 @@ export default async function Page({
                 </div>
             );
         }
-        return <MainPage page={page} />;
+        return (
+            <div className='page-container'>
+                <MainPage page={page} />
+            </div>
+        )
     } catch (error) {
         return (
             <div>

@@ -4,7 +4,7 @@ import { getLocale } from "next-intl/server";
 
 export default async function StudioPage() {
   return (
-    <div className="w-full">
+    <div className="">
       <StudioWindow />
     </div>
   );

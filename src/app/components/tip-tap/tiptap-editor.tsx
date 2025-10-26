@@ -80,7 +80,7 @@ const Tiptap = (props: TiptapProps) => {
     <>
       {editor && (
         <>
-          <BubbleMenu
+          {/* <BubbleMenu
             editor={editor}
             {...({
               tippyOptions: {
@@ -89,68 +89,79 @@ const Tiptap = (props: TiptapProps) => {
                 flip: true,
               }
             } as any)}
+          > */}
+          <div className={'bubble-menu'}
           >
-            <div className={'bubble-menu'}>
-              <CustomTooltip content={'Bold'}>
-                <button
-                  onClick={() => editor.chain().focus().toggleBold().run()}
-                  className={isBold ? 'button-marks is-active font-bold' : 'button-marks font-bold'}
-                >
-                  B
-                </button>
-              </CustomTooltip>
+            <CustomTooltip content={'Bold'}>
+              <button
+                onClick={() => editor.chain().focus().toggleBold().run()}
+                className={isBold ? 'button-marks is-active font-bold' : 'button-marks font-bold'}
+              >
+                B
+              </button>
+            </CustomTooltip>
 
-              <CustomTooltip content={'Italic'}>
-                <button
-                  onClick={() => editor.chain().focus().toggleItalic().run()}
-                  className={isItalic ? 'button-marks is-active italic' : 'button-marks italic'}
-                >
-                  I
-                </button>
-              </CustomTooltip>
+            <CustomTooltip content={'Italic'}>
+              <button
+                onClick={() => editor.chain().focus().toggleItalic().run()}
+                className={isItalic ? 'button-marks is-active italic' : 'button-marks italic'}
+              >
+                I
+              </button>
+            </CustomTooltip>
 
-              <CustomTooltip content={'Strikethrough'}>
-                <button
-                  onClick={() => editor.chain().focus().toggleStrike().run()}
-                  className={isStrike ? 'button-marks is-active ' : 'button-marks'}
-                >
-                  <s>S</s>
-                </button>
-              </CustomTooltip>
+            <CustomTooltip content={'Strikethrough'}>
+              <button
+                onClick={() => editor.chain().focus().toggleStrike().run()}
+                className={isStrike ? 'button-marks is-active ' : 'button-marks'}
+              >
+                <s>S</s>
+              </button>
+            </CustomTooltip>
 
-              <CustomTooltip content={'Inline Code'}>
-                <button
-                  onClick={() => editor.chain().focus().toggleCode().run()}
-                  className={isCode ? 'button-marks is-active' : 'button-marks'}
-                >
-                  {'</>'}
-                </button>
-              </CustomTooltip>
-              <LinkPopover
-                editor={editor}
-                hideWhenUnavailable={true}
-                autoOpenOnLinkActive={true}
-                onSetLink={() => console.log('Link set!')}
-                onOpenChange={(isOpen) => console.log('Popover opened:', isOpen)}
-                className={'button-marks'}
+            <CustomTooltip content={'Inline Code'}>
+              <button
+                onClick={() => editor.chain().focus().toggleCode().run()}
+                className={isCode ? 'button-marks is-active' : 'button-marks'}
+              >
+                {'</>'}
+              </button>
+            </CustomTooltip>
+            <LinkPopover
+              editor={editor}
+              hideWhenUnavailable={true}
+              autoOpenOnLinkActive={true}
+              onSetLink={() => console.log('Link set!')}
+              onOpenChange={(isOpen) => console.log('Popover opened:', isOpen)}
+              className={'button-marks'}
+            />
+            <CustomTooltip content={'Text Color'}>
+              <input
+                type="color"
+                onChange={(e) => {
+                  const color = e.target.value
+                  if (!editor) return
+                  const { empty } = editor.state.selection
+                  if (empty) {
+                    // нет выделения — выходим, чтобы не ловить ошибку
+                    return
+                  }
+                  editor.chain().focus().setColor(color).run()
+                }}
+                value={editor?.getAttributes('textStyle').color || '#000000'}
+                className="button-marks color-picker"
               />
-              <CustomTooltip content={'Text Color'}>
-                <input
-                  type="color"
-                  onChange={(e) => editor.chain().focus().setColor(e.target.value).run()}
-                  value={editor?.getAttributes('textStyle').color || '#000000'}
-                  className="button-marks color-picker"
-                  title="Choose text color"
-                />
-              </CustomTooltip>
-            </div>
-          </BubbleMenu>
+            </CustomTooltip>
+          </div>
+          {/* </BubbleMenu> */}
         </>
       )}
-      <EditorContent
-        editor={editor}
-        className="tiptap-content"
-      />
+      <div className='tiptap-shell'>
+        <EditorContent
+          editor={editor}
+          className="tiptap-content"
+        />
+      </div>
     </>
   )
 }

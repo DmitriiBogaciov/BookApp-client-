@@ -16,7 +16,7 @@ export default async function StudioPageLayout({
 }) {
     try {
         return (
-            <div className='page-layout-0 md:px-15 md:max-w-[1080px] border justify-center w-screen mx-auto'>
+            <div className='page-layout'>
                 {children}
             </div>
         )
@@ -30,4 +30,4 @@ export default async function StudioPageLayout({
             </div>
         );
     }
-}
+}           

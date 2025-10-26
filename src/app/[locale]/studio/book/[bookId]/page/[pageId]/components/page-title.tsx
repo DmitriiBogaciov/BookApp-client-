@@ -61,6 +61,10 @@ export default function PageTitle({bookId, title, pageId, onPageTitleChange, onU
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     onBlur={handleInputBlur}
+                    className="w-full bg-transparent text-3xl! font-semibold 
+                    transition-all duration-500 ease-in-out text-gray-900
+                    hover:border-b-gray-300 hover:text-gray-700
+                    focus:outline-none focus:border-b-gray-400 focus:text-gray-700"
                 />
             </h5>
         </div>

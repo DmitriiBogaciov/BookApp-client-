@@ -2,12 +2,12 @@ import clsx from 'clsx';
 import { Inter } from 'next/font/google';
 import { ReactNode } from 'react';
 import NavBar from './components/NavBar/NavBar'
-import {NextIntlClientProvider} from 'next-intl';
-import {getMessages} from 'next-intl/server';
-import {notFound} from 'next/navigation';
-import {routing} from '@/i18n/routing';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { routing } from '@/i18n/routing';
 import { ApolloClientProvider } from '../providers/apollo-provider';
-import '@/app/globals.css';
+import '../globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -37,14 +37,16 @@ export default async function LocaleLayout({
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
         />
       </head>
-      <body className={clsx(inter.className, 'main-layout')}>
+      <body className={clsx(inter.className, 'root-layout flex flex-col w-screen h-screen overflow-y-hidden')}>
         <NextIntlClientProvider messages={messages}>
           <ApolloClientProvider>
-            <div className='fixed top-0 left-0 right-0 z-60'>
-              <NavBar />
-            </div>
-            <div className="mt-14">
-              {children}
+            <div className='app-frame flex flex-col'>
+              <div className='app-navbar relative h-12 z-100'>
+                <NavBar />
+              </div>
+              <div className="app-content h-[calc(100vh-48px)] overflow-y-hidden">
+                {children}
+              </div>
             </div>
           </ApolloClientProvider>
         </NextIntlClientProvider>

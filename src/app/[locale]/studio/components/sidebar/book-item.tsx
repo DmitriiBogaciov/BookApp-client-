@@ -66,7 +66,7 @@ const BookItem = ({
               </button>
               <Link
                 href={`/studio/book/${book._id}`}
-                className="!text-gray-700 hover:!text-gray-900 font-normal !no-underline flex-1"
+                className="text-gray-700! hover:text-gray-900! font-normal no-underline! flex-1"
               >
                 {book.title}
               </Link>
