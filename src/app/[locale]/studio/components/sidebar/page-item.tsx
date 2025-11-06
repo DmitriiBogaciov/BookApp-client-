@@ -12,7 +12,6 @@ import React, { forwardRef, HTMLAttributes, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { FlattenedItem } from './types'
-import clsx from 'clsx';
 
 interface SortablePageItemProps {
     page: FlattenedItem,
@@ -26,8 +25,6 @@ interface SortablePageItemProps {
     onCreatePage?: (bookId: string, parentId: string | null) => Promise<void>;
     togglePageExpansion?: (pageId: string) => void;
     onRemovePage?: (pageId: string) => Promise<void>;
-    // + глубина для aria-level и отступа
-    depth?: number;
 }
 
 export default function SortablePageItem(
@@ -155,7 +152,7 @@ export default function SortablePageItem(
                 {/* Visual indentation spacer - THIS IS CRITICAL FOR TREE HIERARCHY */}
                 <div
                     style={{ width: indentationPixels }}
-                    className="flex-shrink-0"
+                    className="shrink-0"
                     aria-hidden="true"
                 >
                 </div>
@@ -202,7 +199,7 @@ export default function SortablePageItem(
                         {/* Page title with link */}
                         <Link {...listeners}
                             href={`/studio/book/${bookId}/page/${page._id}`}
-                            className="truncate text-sm !text-gray-700 hover:!text-gray-900 font-normal !no-underline flex-1"
+                            className="truncate text-sm text-gray-700! hover:text-gray-900! font-normal no-underline! flex-1"
                         >
                             {page.title || 'Untitled Page'}
                         </Link>
