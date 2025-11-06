@@ -26,6 +26,7 @@
     "@radix-ui/react-popover": "^1.1.15",
     "@slate-yjs/core": "^1.0.2",
     "@tailwindcss/postcss": "^4.1.15",
+    "@tiptap/core": "^3.10.2",
     "@tiptap/extension-bubble-menu": "^3.7.2",
     "@tiptap/extension-collaboration": "^3.7.2",
     "@tiptap/extension-drag-handle": "^3.7.2",
