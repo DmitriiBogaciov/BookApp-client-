@@ -1,18 +1,36 @@
-.tiptap-content .tiptap.ProseMirror {
-    flex: 1;
-    padding: 3rem 3rem 30vh;
-    max-width: 900px;
-    // margin: 0 auto;
-    outline-style: none;
-
-    // overflow-y: auto;
-    // height: 100vh;
+.tiptap-shell {
+  position: sticky;
+  top: 100px;
+  max-width: 900px;
+  min-width: 900px;
+  margin: 0 auto; 
 }
 
-// .tiptap-shell {
-//   position: sticky;
-//   top: 100px;
-// }
+/* для экранов меньше 900px убираем min-width */
+@media (max-width: 920px) {
+  .tiptap-shell {
+    min-width: auto;
+    max-width: none; /* убираем ограничение */
+    width: 100%; /* занимаем всю доступную ширину */
+    padding: 0 1rem; /* отступы от краёв экрана */
+    margin: 0; /* убираем центрирование */
+  }
+}
+
+.tiptap-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tiptap-content .tiptap.ProseMirror {
+  flex: 1;
+  padding: 3rem 3rem 30vh;
+  width: 100%;
+  outline-style: none;
+  box-sizing: border-box; 
+}
+
 
 // .bubble-menu {
 //   display: flex;
@@ -63,6 +81,7 @@
     color: black;
   }
 }
+
 .button-marks.is-active {
   background-color: var(--color-gray-100);
   color: var(--color-blue-700);
