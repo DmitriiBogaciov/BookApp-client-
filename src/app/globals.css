@@ -1,36 +1,65 @@
 @import "tailwindcss";
 @import "../styles/_variables.scss";
 @import "../styles/_keyframe-animations.scss";
-@import "../app/[locale]/studio/styles.scss";
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  /* --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255; */
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    /* --background-start-rgb: 100, 100, 100;
-    --background-end-rgb: 100, 100, 100; */
+    /* Light theme colors */
+    --background: 255 255 255;
+    --foreground: 15 23 42;
+    --primary: 91 67 161;
+    --primary-foreground: 255 255 255;
+    --secondary: 241 245 249;
+    --secondary-foreground: 15 23 42;
+    --accent: 243 244 246;
+    --accent-foreground: 15 23 42;
+    --muted: 248 250 252;
+    --muted-foreground: 100 116 139;
+    --border: 226 232 240;
+    --input: 226 232 240;
+    --card: 255 255 255;
+    --card-foreground: 15 23 42;
+  }
+
+  .dark {
+    /* Dark theme colors */
+    --background: 15 23 42;
+    --foreground: 248 250 252;
+    --primary: 139 92 246;
+    --primary-foreground: 255 255 255;
+    --secondary: 30 41 59;
+    --secondary-foreground: 248 250 252;
+    --accent: 51 65 85;
+    --accent-foreground: 248 250 252;
+    --muted: 30 41 59;
+    --muted-foreground: 148 163 184;
+    --border: 51 65 85;
+    --input: 51 65 85;
+    --card: 30 41 59;
+    --card-foreground: 248 250 252;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer base {
+  * {
+    border-color: rgb(var(--border));
+  }
+  
+  body {
+    background: linear-gradient(to bottom right, white, rgb(248 250 252), rgb(250 245 255));
+    color: rgb(var(--foreground));
+    transition: color 0.3s ease;
+  }
+  
+  .dark body {
+    background: linear-gradient(to bottom right, rgb(2 6 23), rgb(15 23 42), rgb(59 7 100));
+  }
 }
 
-
+/* Custom scrollbar styles */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(100, 100, 100, 0.5) rgba(200, 200, 200, 0.2);
+  scrollbar-color: rgb(var(--muted-foreground) / 0.3) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -39,17 +68,34 @@ body {
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(200, 200, 200, 0.2);
-  border-radius: 9999px; 
+  background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 100, 100, 0.5);
+  background-color: rgb(203 213 225);
   border-radius: 9999px;
+  transition: background-color 0.2s;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(100, 100, 100, 0.7);
+  background-color: rgb(148 163 184);
+}
+
+.dark *::-webkit-scrollbar-thumb {
+  background-color: rgb(51 65 85);
+}
+
+.dark *::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(71 85 105);
+}
+
+/* Dark mode scrollbar for light backgrounds */
+.dark *::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.3);
+}
+
+.dark *::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.5);
 }
 
 

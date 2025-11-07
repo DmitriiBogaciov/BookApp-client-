@@ -2,7 +2,7 @@
 
 import { Page } from '@/app/utils/interfaces';
 import { Link } from '@/i18n/navigation';
-import ContextMenu from '@/app/[locale]/components/ui/context-menu';
+import ContextMenu from '@/app/[locale]/utils/context-menu';
 import PageInfoTooltip from './page-info-tooltip';
 import { SlOptions } from "react-icons/sl";
 import { IoMdAdd } from 'react-icons/io';
@@ -139,11 +139,11 @@ export default function SortablePageItem(
                 {...props}
                 className={`
                     flex items-center
-                    rounded
+                    rounded-lg
                     transition-colors duration-200
-                    hover:bg-gray-300
+                    hover:bg-slate-200 dark:hover:bg-slate-700
                     ${isDragging ? 'z-50' : ''}
-                    ${isDragOverlay ? 'shadow-lg bg-white border' : ''}
+                    ${isDragOverlay ? 'shadow-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600' : ''}
                 `}
             // onMouseEnter={handleMouseEnter}
             // onMouseMove={handleMouseMove}
@@ -171,7 +171,7 @@ export default function SortablePageItem(
                         {page.hasChildren ? (
                             <button
                                 className="inline-flex justify-center items-center mr-1
-                         text-gray-500 hover:text-gray-800 transition-colors"
+                         text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
                                 onClick={() => togglePageExpansion?.(page._id)}
                                 style={{ width: 16, height: 16 }}
                                 tabIndex={-1}
@@ -189,7 +189,7 @@ export default function SortablePageItem(
                         {/* Page icon */}
                         <CgFileDocument
                             className={`
-                                mr-1
+                                mr-1 text-slate-600 dark:text-slate-400
                             `}
                             style={{
                                 filter: `brightness(${Math.min((1 + depth * 1.5), 6)})`
@@ -199,7 +199,7 @@ export default function SortablePageItem(
                         {/* Page title with link */}
                         <Link {...listeners}
                             href={`/studio/book/${bookId}/page/${page._id}`}
-                            className="truncate text-sm text-gray-700! hover:text-gray-900! font-normal no-underline! flex-1"
+                            className="truncate text-sm text-slate-700 dark:text-slate-300 hover:text-baoboox-600 dark:hover:text-baoboox-400 font-normal no-underline flex-1 transition-colors"
                         >
                             {page.title || 'Untitled Page'}
                         </Link>
@@ -209,8 +209,8 @@ export default function SortablePageItem(
                     <div className="flex items-center gap-1">
                         {/* Create subpage button */}
                         <button
-                            className="p-1 hover:bg-gray-200 rounded text-gray-500 
-                         hover:text-gray-800 transition-colors"
+                            className="p-1 hover:bg-slate-300 dark:hover:bg-slate-600 rounded text-slate-500 dark:text-slate-400
+                         hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onCreatePage?.(bookId, page._id);
@@ -223,8 +223,8 @@ export default function SortablePageItem(
 
                         {/* Options menu button */}
                         <button
-                            className="p-1 hover:bg-gray-200 rounded text-gray-500 
-                         hover:text-gray-800 transition-colors"
+                            className="p-1 hover:bg-slate-300 dark:hover:bg-slate-600 rounded text-slate-500 dark:text-slate-400
+                         hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleMenuClick?.(e, page._id);
@@ -264,7 +264,7 @@ export default function SortablePageItem(
                                 }
                                 setActiveMenu(null);
                             }}
-                            className="block w-full text-left text-red-600 hover:text-red-800 p-1"
+                            className="block w-full text-left text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 p-1 transition-colors"
                         >
                             Delete
                         </button>

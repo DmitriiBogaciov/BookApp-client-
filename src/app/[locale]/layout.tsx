@@ -1,12 +1,13 @@
 import clsx from 'clsx';
 import { Inter } from 'next/font/google';
 import { ReactNode } from 'react';
-import NavBar from './components/NavBar/NavBar'
+import NavBar from './components/NavBar'
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ApolloClientProvider } from '../providers/apollo-provider';
+import { ThemeProvider } from '../providers/theme-provider';
 import '../globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -16,41 +17,41 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
-export default async function LocaleLayout({
-  children,
-  params
-}: Props) {
+export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
-  // Providing all messages to the client
-  // side is the easiest way to get started
+
   const messages = await getMessages();
 
   return (
-    <html className="" lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
         />
       </head>
-      <body className={clsx(inter.className, 'root-layout flex flex-col w-screen h-screen overflow-y-hidden')}>
-        <NextIntlClientProvider messages={messages}>
-          <ApolloClientProvider>
-            <div className='app-frame flex flex-col'>
-              <div className='app-navbar relative h-12 z-100'>
+      <body className={clsx(inter.className, 'flex flex-col w-screen h-screen overflow-hidden')}>
+        <ThemeProvider>
+          <NextIntlClientProvider messages={messages}>
+            <ApolloClientProvider>
+              {/* Фиксированный header */}
+              <nav className='h-12 relative z-100 shrink-0'>
                 <NavBar />
-              </div>
-              <div className="app-content h-[calc(100vh-48px)] overflow-y-hidden">
+              </nav>
+
+              {/* Прокручиваемый контент */}
+              <main className="flex-1 overflow-hidden">
                 {children}
-              </div>
-            </div>
-          </ApolloClientProvider>
-        </NextIntlClientProvider>
+              </main>
+            </ApolloClientProvider>
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
 }
+

@@ -7,7 +7,10 @@ import { LinkPopover, useLinkPopover } from '@/components/tiptap-ui/link-popover
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/tiptap-ui-primitive/tooltip'
 import { ReactNode } from 'react'
 import { TextStyleKit } from '@tiptap/extension-text-style'
+import DragHandle from '@tiptap/extension-drag-handle-react'
+import { RiDraggable } from "react-icons/ri";
 import './tiptap-editor.scss'
+import { flip, offset, shift } from '@floating-ui/react'
 
 interface TiptapProps {
   content: string,
@@ -130,6 +133,24 @@ const Tiptap = (props: TiptapProps) => {
         </>
       )}
       <div className='tiptap-shell'>
+        {editor && (
+          <DragHandle
+            editor={editor}
+            className="drag-handle"
+            computePositionConfig={{
+              placement: 'left-start',
+              middleware: [
+                offset(6),
+                flip(),
+                shift({ padding: 8 }),
+              ],
+            }}
+          >
+            <RiDraggable
+              className='drag-icon'
+            />
+          </DragHandle>
+        )}
         <EditorContent
           editor={editor}
           className="tiptap-content"
