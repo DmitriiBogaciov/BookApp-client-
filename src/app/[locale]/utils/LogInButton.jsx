@@ -23,7 +23,8 @@ const LogInButton = () => {
 
     if (!user) {
         return (
-            <NavLink href={`/auth/login?returnTo=${pathname}`} className="text-slate-700!" color='light'>
+            <NavLink href={`/auth/login?returnTo=${pathname}`} className="no-underline! text-slate-700! dark:text-slate-300! hover:text-slate-900! dark:hover:text-slate-200! 
+        hover:bg-slate-100! dark:hover:bg-slate-600! rounded-lg transition-all duration-800" color='light'>
                 {t('Login')}
             </NavLink>
         );
@@ -31,7 +32,8 @@ const LogInButton = () => {
 
     if (user) {
         return (
-            <NavLink href="/auth/logout" className="text-slate-700!" color='light'>
+            <NavLink href="/auth/logout" className="no-underline! text-slate-700! dark:text-slate-300! hover:text-slate-900! dark:hover:text-slate-200! 
+        hover:bg-slate-100! dark:hover:bg-slate-600! rounded-lg transition-all duration-800" color='light'>
                 {t('Logout')}
             </NavLink>
 

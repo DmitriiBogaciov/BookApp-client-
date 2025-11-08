@@ -12,7 +12,8 @@ function CustomLink({ href, className = '', children, onClick, ...props }) {
   return (
     <Link
       href={href}
-      className={`no-underline text-slate-700 dark:text-slate-300 hover:text-baoboox-600 dark:hover:text-baoboox-400 transition-colors duration-200 ${className}`}
+      className={`no-underline! text-slate-700! dark:text-slate-300! hover:text-slate-900! dark:hover:text-slate-200! 
+        hover:bg-slate-100! dark:hover:bg-slate-600! rounded-lg transition-all duration-800 p-1 ${className}`}
       onClick={onClick}
       {...props}
     >
@@ -27,8 +28,8 @@ const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="relative w-full h-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-lg border-b border-slate-200 dark:border-slate-800">
-      <div className="flex h-full items-center justify-between px-4">
+    <nav className="relative w-full h-full">
+      <div className="flex h-full items-center justify-between px-4 bg-background">
         {/* Logo */}
         <CustomLink href="/" className="font-bold text-lg text-baoboox-600 dark:text-baoboox-400 hover:text-baoboox-700 dark:hover:text-baoboox-300">
           BaoBoox

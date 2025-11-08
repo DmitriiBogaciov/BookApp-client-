@@ -2,57 +2,94 @@
 @import "../styles/_variables.scss";
 @import "../styles/_keyframe-animations.scss";
 
-@layer base {
-  :root {
-    /* Light theme colors */
-    --background: 255 255 255;
-    --foreground: 15 23 42;
-    --primary: 91 67 161;
-    --primary-foreground: 255 255 255;
-    --secondary: 241 245 249;
-    --secondary-foreground: 15 23 42;
-    --accent: 243 244 246;
-    --accent-foreground: 15 23 42;
-    --muted: 248 250 252;
-    --muted-foreground: 100 116 139;
-    --border: 226 232 240;
-    --input: 226 232 240;
-    --card: 255 255 255;
-    --card-foreground: 15 23 42;
-  }
+@custom-variant dark (&:where(.dark, .dark *));
 
-  .dark {
-    /* Dark theme colors */
-    --background: 15 23 42;
-    --foreground: 248 250 252;
-    --primary: 139 92 246;
-    --primary-foreground: 255 255 255;
-    --secondary: 30 41 59;
-    --secondary-foreground: 248 250 252;
-    --accent: 51 65 85;
-    --accent-foreground: 248 250 252;
-    --muted: 30 41 59;
-    --muted-foreground: 148 163 184;
-    --border: 51 65 85;
-    --input: 51 65 85;
-    --card: 30 41 59;
-    --card-foreground: 248 250 252;
-  }
+@theme {
+  /* Using --color-* namespace for auto-generated classes */
+  
+  /* ===== LIGHT THEME - Semantic colors ===== */
+  
+  /* Main page background */
+  --color-background: #ffffff;
+  
+  /* Main text color */
+  --color-foreground: #0f172a;
+  
+  /* Background for cards, panels */
+  --color-surface: #f8fafc;
+  
+  /* Primary accent color (buttons, links) */
+  --color-primary: #5b43a1;
+  
+  /* Text color on primary background */
+  --color-primary-foreground: #ffffff;
+  
+  /* Secondary background (for inactive elements) */
+  --color-secondary: #f1f5f9;
+  
+  /* Text color on secondary background */
+  --color-secondary-foreground: #0f172a;
+  
+  /* Highlight color (hover, focus) */
+  --color-accent: #8b5cf6;
+  
+  /* Border color */
+  --color-border: #e2e8f0;
+  
+  /* Input border color */
+  --color-input: #e2e8f0;
+  
+  /* ===== Brand color Baoboox (shades from light to dark) ===== */
+  --color-baoboox-50: #f5f3ff;   /* Lightest (backgrounds) */
+  --color-baoboox-100: #ede9fe;  /* Very light */
+  --color-baoboox-200: #ddd6fe;  /* Light */
+  --color-baoboox-300: #c4b5fd;  /* Light-medium */
+  --color-baoboox-400: #a78bfa;  /* Medium */
+  --color-baoboox-500: #5b43a1;  /* Base brand color (DEFAULT) */
+  --color-baoboox-600: #7c3aed;  /* Medium-dark */
+  --color-baoboox-700: #6d28d9;  /* Dark */
+  --color-baoboox-800: #5b21b6;  /* Very dark */
+  --color-baoboox-900: #4c1d95;  /* Darkest */
 }
 
-@layer base {
-  * {
-    border-color: rgb(var(--border));
-  }
-  
-  body {
-    background: linear-gradient(to bottom right, white, rgb(248 250 252), rgb(250 245 255));
-    color: rgb(var(--foreground));
-    transition: color 0.3s ease;
-  }
-  
-  .dark body {
-    background: linear-gradient(to bottom right, rgb(2 6 23), rgb(15 23 42), rgb(59 7 100));
+/* ===== DARK THEME - Color overrides ===== */
+@layer theme {
+  :root, :host {
+    @variant dark {
+      /* Dark page background */
+      --color-background: #0f172a;
+      
+      /* Light text on dark background */
+      --color-foreground: #f8fafc;
+      
+      /* Card background (darker than background) */
+      --color-surface: #1e293b;
+      
+      /* Brighter primary for dark theme */
+      --color-primary: #8b5cf6;
+      
+      /* Text color on primary (unchanged) */
+      --color-primary-foreground: #ffffff;
+      
+      /* Dark secondary background */
+      --color-secondary: #1e293b;
+      
+      /* Light text on secondary background */
+      --color-secondary-foreground: #f8fafc;
+      
+      /* Brighter accent for visibility */
+      --color-accent: #a855f7;
+      
+      /* Dark borders */
+      --color-border: #334155;
+      
+      /* Dark input borders */
+      --color-input: #334155;
+      
+      /* Override only base baoboox shades for dark theme */
+      --color-baoboox-500: #8b5cf6;  /* Brighter for contrast */
+      --color-baoboox-600: #7c3aed;  /* Brighter for contrast */
+    }
   }
 }
 
@@ -71,34 +108,22 @@
   background: transparent;
 }
 
+/* Light theme - scrollbar */
 *::-webkit-scrollbar-thumb {
-  background-color: rgb(203 213 225);
+  background-color: rgb(203 213 225); /* Light gray */
   border-radius: 9999px;
   transition: background-color 0.2s;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(148 163 184);
+  background-color: rgb(148 163 184); /* Darker on hover */
 }
 
+/* Dark theme - scrollbar */
 .dark *::-webkit-scrollbar-thumb {
-  background-color: rgb(51 65 85);
+  background-color: rgba(148, 163, 184, 0.3); /* Semi-transparent gray */
 }
 
 .dark *::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(71 85 105);
+  background-color: rgba(148, 163, 184, 0.5); /* Less transparent on hover */
 }
-
-/* Dark mode scrollbar for light backgrounds */
-.dark *::-webkit-scrollbar-thumb {
-  background-color: rgba(148, 163, 184, 0.3);
-}
-
-.dark *::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(148, 163, 184, 0.5);
-}
-
-
-
-
-
